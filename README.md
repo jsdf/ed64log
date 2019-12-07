@@ -34,7 +34,7 @@ example of uploading and booting a rom:
 ```
 
 
-## original linux instructions
+## linux instructions
 please run as root
 
 
@@ -44,14 +44,21 @@ http://www.intra2net.com/en/developer/libftdi/
 
 
 compilation:
+
+```
 chmod +x make.sh
 ./make.sh
-
+```
 
 - examples -
 
 upload rom:
+
+```
 sudo ./loader64 -vwf OS64.v64
+```
 
 boot rom:
+```
 sudo ./loader64 -vp
+```
