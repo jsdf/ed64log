@@ -1,9 +1,12 @@
 # loader64
 loader64 - Everdrive64 USB-tool v0.1
+
 OS64 compatible USB upload tool
+
 by saturnu <tt@anpa.nl>
 
 originally from http://krikzz.com/forum/index.php?topic=1407.msg14076
+
 forked by @jsdf to add macOS compatibility
 
 ## macOS instructions
