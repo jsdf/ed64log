@@ -11,17 +11,17 @@
 		739987E6239C536700EC20E6 /* loader64.c in Sources */ = {isa = PBXBuildFile; fileRef = 739987E4239C536700EC20E6 /* loader64.c */; };
 		739987EB239C540700EC20E6 /* libusb-1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 739987EA239C540700EC20E6 /* libusb-1.0.a */; };
 		739987ED239C541200EC20E6 /* libftdi1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 739987EC239C541200EC20E6 /* libftdi1.a */; };
-		739987EF239C55DC00EC20E6 /* loader64 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 739987D7239C534A00EC20E6 /* loader64 */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		739987F0239C6B5400EC20E6 /* loader64 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 739987D7239C534A00EC20E6 /* loader64 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		739987D5239C534A00EC20E6 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
-			dstPath = /Users/jfriend/.wine/drive_c/nintendo/n64kit/nusys/sample/nu1goose64;
+			dstPath = /usr/local/bin;
 			dstSubfolderSpec = 0;
 			files = (
-				739987EF239C55DC00EC20E6 /* loader64 in CopyFiles */,
+				739987F0239C6B5400EC20E6 /* loader64 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

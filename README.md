@@ -21,9 +21,9 @@ brew install libftdi libusb
 
 - in XCode, open loader64/loader64.xcodeproj
 
-- in the loader64 target's build phases tab, change the 'copy files' command output path to where you want the loader64 binary installed
+- by default, building will install loader64 to `/usr/local/bin`. If you want to change this, in the loader64 target's build phases tab, change the 'copy files' command output path to where you want the loader64 binary installed
 
-- build
+- click 'run' to build and install loader64 binary
 
 ### usage
 
