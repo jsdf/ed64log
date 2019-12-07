@@ -11,19 +11,23 @@ forked by @jsdf to add macOS compatibility
 
 ## macOS instructions
 
-install libraries:
+### building from source
+
+install required libraries from homebrew:
 
 ```bash
 brew install libftdi libusb
 ```
 
-in XCode, open loader64/loader64.xcodeproj
+- in XCode, open loader64/loader64.xcodeproj
 
-in the loader64 target's build phases tab, change the 'copy files' command output path to where you want the binary installed
+- in the loader64 target's build phases tab, change the 'copy files' command output path to where you want the loader64 binary installed
 
+- build
 
+### usage
 
-example of uploading and booting a rom:
+uploading and booting a rom:
 
 ```bash
 # upload rom
