@@ -7,32 +7,48 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		739987E5239C536700EC20E6 /* gopt.c in Sources */ = {isa = PBXBuildFile; fileRef = 739987E2239C536700EC20E6 /* gopt.c */; };
-		739987E6239C536700EC20E6 /* loader64.c in Sources */ = {isa = PBXBuildFile; fileRef = 739987E4239C536700EC20E6 /* loader64.c */; };
+		7370118323CC408500874576 /* ed64log.c in Sources */ = {isa = PBXBuildFile; fileRef = 7370117E23CC408400874576 /* ed64log.c */; };
+		7370118423CC408500874576 /* gopt.c in Sources */ = {isa = PBXBuildFile; fileRef = 7370118023CC408400874576 /* gopt.c */; };
+		7370119423CC413F00874576 /* gopt.c in Sources */ = {isa = PBXBuildFile; fileRef = 7370119123CC413F00874576 /* gopt.c */; };
+		7370119523CC413F00874576 /* ed64log.c in Sources */ = {isa = PBXBuildFile; fileRef = 7370119323CC413F00874576 /* ed64log.c */; };
+		7370119A23CC414E00874576 /* gopt.c in Sources */ = {isa = PBXBuildFile; fileRef = 7370119723CC414E00874576 /* gopt.c */; };
+		7370119B23CC414E00874576 /* ed64log.c in Sources */ = {isa = PBXBuildFile; fileRef = 7370119823CC414E00874576 /* ed64log.c */; };
 		739987EB239C540700EC20E6 /* libusb-1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 739987EA239C540700EC20E6 /* libusb-1.0.a */; };
 		739987ED239C541200EC20E6 /* libftdi1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 739987EC239C541200EC20E6 /* libftdi1.a */; };
-		739987F0239C6B5400EC20E6 /* loader64 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 739987D7239C534A00EC20E6 /* loader64 */; };
+		73A2636E23D1692700114A8A /* ed64log in Copy Files */ = {isa = PBXBuildFile; fileRef = 739987D7239C534A00EC20E6 /* ed64log */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		739987D5239C534A00EC20E6 /* CopyFiles */ = {
+		739987D5239C534A00EC20E6 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
 			dstPath = /usr/local/bin;
 			dstSubfolderSpec = 0;
 			files = (
-				739987F0239C6B5400EC20E6 /* loader64 in CopyFiles */,
+				73A2636E23D1692700114A8A /* ed64log in Copy Files */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		739987D7239C534A00EC20E6 /* loader64 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = loader64; sourceTree = BUILT_PRODUCTS_DIR; };
-		739987E1239C536700EC20E6 /* loader64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loader64.h; path = ../../loader64.h; sourceTree = "<group>"; };
-		739987E2239C536700EC20E6 /* gopt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gopt.c; path = ../../gopt.c; sourceTree = "<group>"; };
-		739987E3239C536700EC20E6 /* gopt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gopt.h; path = ../../gopt.h; sourceTree = "<group>"; };
-		739987E4239C536700EC20E6 /* loader64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = loader64.c; path = ../../loader64.c; sourceTree = "<group>"; };
+		7370117C23CC408400874576 /* ed64log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed64log.h; path = ../ed64log.h; sourceTree = "<group>"; };
+		7370117D23CC408400874576 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../README; sourceTree = "<group>"; };
+		7370117E23CC408400874576 /* ed64log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ed64log.c; path = ../ed64log.c; sourceTree = "<group>"; };
+		7370117F23CC408400874576 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		7370118023CC408400874576 /* gopt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gopt.c; path = ../gopt.c; sourceTree = "<group>"; };
+		7370118123CC408400874576 /* gopt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gopt.h; path = ../gopt.h; sourceTree = "<group>"; };
+		7370118223CC408400874576 /* make.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = make.sh; path = ../make.sh; sourceTree = "<group>"; };
+		7370119023CC413F00874576 /* ed64log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed64log.h; path = ../ed64log.h; sourceTree = "<group>"; };
+		7370119123CC413F00874576 /* gopt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gopt.c; path = ../gopt.c; sourceTree = "<group>"; };
+		7370119223CC413F00874576 /* gopt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gopt.h; path = ../gopt.h; sourceTree = "<group>"; };
+		7370119323CC413F00874576 /* ed64log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ed64log.c; path = ../ed64log.c; sourceTree = "<group>"; };
+		7370119623CC414E00874576 /* ed64log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ed64log.h; path = ../ed64log.h; sourceTree = "<group>"; };
+		7370119723CC414E00874576 /* gopt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gopt.c; path = ../gopt.c; sourceTree = "<group>"; };
+		7370119823CC414E00874576 /* ed64log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ed64log.c; path = ../ed64log.c; sourceTree = "<group>"; };
+		7370119923CC414E00874576 /* gopt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gopt.h; path = ../gopt.h; sourceTree = "<group>"; };
+		739987D7239C534A00EC20E6 /* ed64log */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ed64log; sourceTree = BUILT_PRODUCTS_DIR; };
 		739987E8239C53F300EC20E6 /* libftdi1.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libftdi1.2.4.0.dylib; path = ../../../../../usr/local/Cellar/libftdi/1.4_1/lib/libftdi1.2.4.0.dylib; sourceTree = "<group>"; };
 		739987EA239C540700EC20E6 /* libusb-1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libusb-1.0.a"; path = "../../../../../usr/local/Cellar/libusb/1.0.23/lib/libusb-1.0.a"; sourceTree = "<group>"; };
 		739987EC239C541200EC20E6 /* libftdi1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libftdi1.a; path = ../../../../../usr/local/Cellar/libftdi/1.4_1/lib/libftdi1.a; sourceTree = "<group>"; };
@@ -51,10 +67,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7370118A23CC40ED00874576 /* ed64log */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ed64log;
+			sourceTree = "<group>";
+		};
 		739987CE239C534A00EC20E6 = {
 			isa = PBXGroup;
 			children = (
-				739987D9239C534A00EC20E6 /* loader64 */,
+				7370119823CC414E00874576 /* ed64log.c */,
+				7370119623CC414E00874576 /* ed64log.h */,
+				7370119723CC414E00874576 /* gopt.c */,
+				7370119923CC414E00874576 /* gopt.h */,
+				7370118A23CC40ED00874576 /* ed64log */,
 				739987D8239C534A00EC20E6 /* Products */,
 				739987E7239C53F300EC20E6 /* Frameworks */,
 			);
@@ -63,25 +90,25 @@
 		739987D8239C534A00EC20E6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				739987D7239C534A00EC20E6 /* loader64 */,
+				739987D7239C534A00EC20E6 /* ed64log */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		739987D9239C534A00EC20E6 /* loader64 */ = {
-			isa = PBXGroup;
-			children = (
-				739987E2239C536700EC20E6 /* gopt.c */,
-				739987E3239C536700EC20E6 /* gopt.h */,
-				739987E4239C536700EC20E6 /* loader64.c */,
-				739987E1239C536700EC20E6 /* loader64.h */,
-			);
-			path = loader64;
 			sourceTree = "<group>";
 		};
 		739987E7239C53F300EC20E6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7370117E23CC408400874576 /* ed64log.c */,
+				7370119323CC413F00874576 /* ed64log.c */,
+				7370117C23CC408400874576 /* ed64log.h */,
+				7370118023CC408400874576 /* gopt.c */,
+				7370118123CC408400874576 /* gopt.h */,
+				7370119023CC413F00874576 /* ed64log.h */,
+				7370119123CC413F00874576 /* gopt.c */,
+				7370119223CC413F00874576 /* gopt.h */,
+				7370118223CC408400874576 /* make.sh */,
+				7370117D23CC408400874576 /* README */,
+				7370117F23CC408400874576 /* README.md */,
 				739987EC239C541200EC20E6 /* libftdi1.a */,
 				739987EA239C540700EC20E6 /* libusb-1.0.a */,
 				739987E8239C53F300EC20E6 /* libftdi1.2.4.0.dylib */,
@@ -92,21 +119,21 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		739987D6239C534A00EC20E6 /* loader64 */ = {
+		739987D6239C534A00EC20E6 /* ed64log */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 739987DE239C534A00EC20E6 /* Build configuration list for PBXNativeTarget "loader64" */;
+			buildConfigurationList = 739987DE239C534A00EC20E6 /* Build configuration list for PBXNativeTarget "ed64log" */;
 			buildPhases = (
 				739987D3239C534A00EC20E6 /* Sources */,
 				739987D4239C534A00EC20E6 /* Frameworks */,
-				739987D5239C534A00EC20E6 /* CopyFiles */,
+				739987D5239C534A00EC20E6 /* Copy Files */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = loader64;
+			name = ed64log;
 			productName = loader64;
-			productReference = 739987D7239C534A00EC20E6 /* loader64 */;
+			productReference = 739987D7239C534A00EC20E6 /* ed64log */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -123,7 +150,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 739987D2239C534A00EC20E6 /* Build configuration list for PBXProject "loader64" */;
+			buildConfigurationList = 739987D2239C534A00EC20E6 /* Build configuration list for PBXProject "ed64log" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -136,7 +163,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				739987D6239C534A00EC20E6 /* loader64 */,
+				739987D6239C534A00EC20E6 /* ed64log */,
 			);
 		};
 /* End PBXProject section */
@@ -146,8 +173,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				739987E6239C536700EC20E6 /* loader64.c in Sources */,
-				739987E5239C536700EC20E6 /* gopt.c in Sources */,
+				7370119A23CC414E00874576 /* gopt.c in Sources */,
+				7370118323CC408500874576 /* ed64log.c in Sources */,
+				7370119423CC413F00874576 /* gopt.c in Sources */,
+				7370118423CC408500874576 /* gopt.c in Sources */,
+				7370119523CC413F00874576 /* ed64log.c in Sources */,
+				7370119B23CC414E00874576 /* ed64log.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,7 +323,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		739987D2239C534A00EC20E6 /* Build configuration list for PBXProject "loader64" */ = {
+		739987D2239C534A00EC20E6 /* Build configuration list for PBXProject "ed64log" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				739987DC239C534A00EC20E6 /* Debug */,
@@ -301,7 +332,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		739987DE239C534A00EC20E6 /* Build configuration list for PBXNativeTarget "loader64" */ = {
+		739987DE239C534A00EC20E6 /* Build configuration list for PBXNativeTarget "ed64log" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				739987DF239C534A00EC20E6 /* Debug */,

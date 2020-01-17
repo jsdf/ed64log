@@ -1,5 +1,5 @@
 /*
- * loader64.h
+ * ed64log.h
  */
 
 #define FILE_CHUNK 0x8000
