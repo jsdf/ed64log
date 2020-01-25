@@ -3,15 +3,18 @@
 enables printf() logging over usb from homebrew games built using the n64 sdk, while running on an everdrive 64 device.
 
 
-### usage
+### getting started
 
-to implement usb logging in your n64 game, copy the sources from the [n64](n64) directory of this repo into your game's source, and adding the .c files to your Makefile. this code depends on some library functions provided by NuSystem and NuStd, so make sure you have configured your Makefile to include both of those libraries, as described in the n64 sdk docs (eg. it should include `-lnusys` and `-lnustd` or their debug equivalents).
+to implement usb logging in your n64 game:
 
-in the main loop (or at some regular interval) include [ed64io_usb.h](n64/ed64io_usb.h) and call `usbLoggerFlush()` to write pending logs to the computer via usb.
+- copy the sources from the [n64](n64) directory of this repo into your game's source, and add the .c files to your Makefile.
+  this code depends on some library functions provided by NuSystem and NuStd, so make sure you have configured your Makefile to include both of those libraries, as described in the n64 sdk docs (eg. it should include `-lnusys` and `-lnustd` or their debug equivalents).
 
-to use printf logging in your game, include [ed64io_usb.h](n64/ed64io_usb.h) in your source file and use `ed64Printf()` as you would normally use `printf()` in other programs.
+- in the main loop (or at some regular interval) include [ed64io_usb.h](n64/ed64io_usb.h) and call `usbLoggerFlush()` to write pending logs to the computer via usb.
 
-[example of implementing logging in a game](https://github.com/jsdf/goose64/commit/cf2259a2b47cd8e2f828ad61a5dd5ddcd2c02986).
+- to use printf logging in your game, include [ed64io_usb.h](n64/ed64io_usb.h) in your source file and use `ed64Printf()` as you would normally use `printf()` in other programs.
+
+you can see an example of implementing logging in a game in this commit to [goose64](https://github.com/jsdf/goose64/commit/cf2259a2b47cd8e2f828ad61a5dd5ddcd2c02986).
 
 
 ### using the tool (macOS)
