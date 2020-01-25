@@ -1,1 +1,1 @@
-gcc loader64.c gopt.c -o loader64 -lusb -lftdi -v
+gcc ed64log.c gopt.c -o ed64log -lusb -lftdi -v

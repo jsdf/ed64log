@@ -1,6 +1,5 @@
-/* loader64.c
-   libftdi Everdrive 64 USB-tool
-   by saturnu
+/* ed64log.c
+   libftdi Everdrive64 USB logging tool
 */
 
 #include <stdio.h>
@@ -44,23 +43,14 @@ int main(int argc, const char** argv) {
           gopt_option('h', 0, gopt_shorts('h'), gopt_longs("help")),
           gopt_option('z', 0, gopt_shorts('z'), gopt_longs("version")),
           gopt_option('v', GOPT_REPEAT, gopt_shorts('v'),
-                      gopt_longs("verbose")),
-          gopt_option('r', 0, gopt_shorts('r'), gopt_longs("read")),
-          gopt_option('w', 0, gopt_shorts('w'), gopt_longs("write")),
-          gopt_option('p', 0, gopt_shorts('p'), gopt_longs("pifboot")),
-          gopt_option('f', GOPT_ARG, gopt_shorts('f'), gopt_longs("file"))));
+                      gopt_longs("verbose"))
+          ));
 
   if (gopt(options, 'h')) {
-    fprintf(stdout, "Syntax: sudo ./loader64 [options] ...\n\n");
-    fprintf(stdout, "loader64 - Everdrive64 USB-tool\n");
-    fprintf(stdout, "by saturnu <tt@anpa.nl>\n\n");
+    fprintf(stdout, "Syntax: sudo ./ed64log [options] ...\n\n");
+    fprintf(stdout, "ed64log - Everdrive64 USB logging tool\n");
     fprintf(stdout, " -h, --help\t\tdisplay this help and exit\n");
     fprintf(stdout, " -v, --verbose\t\tverbose\n");
-    fprintf(stdout, " -f, --file=rom.z64\trom in z64 format\n");
-    // TODO:
-    // fprintf( stdout, " -r, --read\t\tread from sdram\n" );
-    fprintf(stdout, " -w, --write\t\twrite to sdram\n");
-    fprintf(stdout, " -p, --pifboot\t\tsimulate pifboot CIC-6102\n");
     fprintf(stdout, " -z, --version\t\tversion\n");
 
     exit(EXIT_SUCCESS);
@@ -119,31 +109,7 @@ int main(int argc, const char** argv) {
     // init usb transfer buffer
     memset(send_buff, 0, 512);
     memset(recv_buff, 0, 512);
-
-    if (0) {
-      send_buff[0] = 'C';
-      send_buff[1] = 'M';
-      send_buff[2] = 'D';
-      send_buff[3] = 'T';  // test
-
-      ret_s = ftdi_write_data(ftdi, send_buff, 512);
-
-      if (verbosity >= 1)
-        printf("send: %i bytes\n", ret_s);
-
-      ret_r = ftdi_read_data(ftdi, recv_buff, 512);
-
-      if (verbosity >= 1)
-        printf("recv: %i bytes\n", ret_r);
-
-      if (recv_buff[3] == 'k') {
-        printf("init test: ok\n");
-      } else {
-        printf("init test: faild - ED64 not running?\n");
-        ftdi_free(ftdi);
-        exit(EXIT_FAILURE);
-      }
-    }
+ 
 
     if (verbosity >= 1)
       printf("start logging\n");
@@ -153,18 +119,7 @@ int main(int argc, const char** argv) {
       memset(recv_buff, 0, 512);
       ret_s = 0;
       ret_r = 0;
-
-      // send_buff[0] = 'C';
-      // send_buff[1] = 'M';
-      // send_buff[2] = 'D';
-      // send_buff[3] = 'L';  // log
-
-      // ret_s = ftdi_write_data(ftdi, send_buff, 512);
-
-      // if (verbosity >= 1)
-      //   printf("send: %i bytes\n", ret_s);
-
-      // usleep(1000);
+ 
       ret_r = ftdi_read_data(ftdi, recv_buff, 512);
 
       if (verbosity >= 1)
@@ -176,13 +131,10 @@ int main(int argc, const char** argv) {
           if (recv_buff[chIdx] == '\0')
             break;
           printf("%c", recv_buff[chIdx]);
-        }
-        // if (chIdx > 0) {
-        //   printf("\n");
-        // }
+        } 
       }
 
-      // usleep(1000);
+      usleep(500);
     }
 
     memset(send_buff, 0, 512);
