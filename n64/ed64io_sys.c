@@ -1,6 +1,5 @@
 #include <nusys.h>
 
-#include "constants.h"
 
 #include "ed64io_sys.h"
 
@@ -126,9 +125,9 @@ void dma_write_s(void* ram_address,
 
 // blocking sleep
 void sleep(u32 ms) {
-  u32 current_ms = CUR_TIME_MS();
+  u32 current_ms = OS_CYCLES_TO_USEC(osGetTime()) / 1000.0;
 
-  while (CUR_TIME_MS() - current_ms < ms)
+  while ((OS_CYCLES_TO_USEC(osGetTime()) / 1000.0) - current_ms < ms)
     ;
 }
 
