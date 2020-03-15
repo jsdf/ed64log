@@ -301,8 +301,6 @@ void evd_fifoWrNonblock(void* buff,
                    buf_ptr, size, &state->dmaMesgQ);
       state->state++;
     case 1:
-      state->state++;
-    case 2:
       // non-blocking check of DMA-to-cart message queue
       msgRet = osRecvMesg(&state->dmaMesgQ, NULL, OS_MESG_NOBLOCK);
       if (msgRet == -1) {
@@ -310,7 +308,7 @@ void evd_fifoWrNonblock(void* buff,
         return;
       }
       state->state++;
-    case 3:
+    case 2:
       if (evd_fifoTxe())
         return;
 
@@ -324,7 +322,7 @@ void evd_fifoWrNonblock(void* buff,
 
       state->state++;
       return;  // always wait a little for DMA
-    case 4:
+    case 3:
       // wait for DMA write to host
       if (evd_isDmaBusyNoWait()) {
         return;
