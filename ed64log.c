@@ -25,7 +25,6 @@ int main(int argc, const char** argv) {
   signal(SIGINT, inthand);
 
   // usb buffer
-  char send_buff[512];
   char recv_buff[512];
 
   int arg_fail = 0;
@@ -107,7 +106,6 @@ int main(int argc, const char** argv) {
     }
 
     // init usb transfer buffer
-    memset(send_buff, 0, 512);
     memset(recv_buff, 0, 512);
  
 
@@ -115,7 +113,6 @@ int main(int argc, const char** argv) {
       printf("start logging\n");
 
     while (!stop) {
-      memset(send_buff, 0, 512);
       memset(recv_buff, 0, 512);
       ret_s = 0;
       ret_r = 0;
@@ -132,12 +129,14 @@ int main(int argc, const char** argv) {
             break;
           printf("%c", recv_buff[chIdx]);
         } 
+
+        fflush(stdout); // Will now print everything in the stdout buffer
       }
+
 
       usleep(500);
     }
 
-    memset(send_buff, 0, 512);
     memset(recv_buff, 0, 512);
     ret_s = 0;
     ret_r = 0;
