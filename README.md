@@ -66,7 +66,15 @@ sudo ./ed64log
 
 
 ### using the tool (windows) (experimental) (who knows if it works)
-download the [latest win64 binary](https://jamesfriend.com.au/projects/n64dev/ed64log-win64-latest.zip)
+- download the [latest win64 binary](https://jamesfriend.com.au/projects/n64dev/ed64log-win64-latest.zip)
+
+or
+
+- install gcc (eg. with mingw)
+- clone this repo
+- download and extract [this](https://sourceforge.net/projects/picusb/files/libftdi1-1.4git_devkit_x86_x64_14June2018.zip/download) to `../libftdi` (adjacent to your clone of this repo)
+- run `make.bat` in this repo
+
 
 then, after starting the game on the everdrive, run
 

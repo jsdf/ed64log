@@ -15,14 +15,24 @@
 #include "ed64log.h"
 #include "gopt.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#define __WINDOWS__
+#endif
+
+#ifndef __WINDOWS__
 volatile sig_atomic_t stop;
+#else
+int stop = 0;
+#endif
 
 void inthand(int signum) {
   stop = 1;
 }
 
 int main(int argc, const char** argv) {
+#ifndef __WINDOWS__
   signal(SIGINT, inthand);
+#endif
 
   // usb buffer
   char recv_buff[512];
