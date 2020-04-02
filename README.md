@@ -66,7 +66,7 @@ sudo ./ed64log
 
 
 ### using the tool (windows) (experimental) (who knows if it works)
-- download the [latest win64 binary](https://jamesfriend.com.au/projects/n64dev/ed64log-win64-latest.zip)
+- download the latest [win32 binary](https://jamesfriend.com.au/projects/n64dev/ed64log-win32-latest.zip) or [win64 binary](https://jamesfriend.com.au/projects/n64dev/ed64log-win64-latest.zip).
 
 or
 
