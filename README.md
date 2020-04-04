@@ -49,18 +49,21 @@ this will output the logs as they are sent from the everdrive
 
 ### using the tool (linux)
 
-install libftdi from your package manager of choice
+install `libftdi` from your package manager of choice. eg for ubuntu:
+
+```bash
+sudo apt-get install libftdi1
+```
 
 compile the ed64log tool from source:
 
-```
-chmod +x make.sh
+```bash
 ./make.sh
 ```
 
 then, to start tailing the logs:
 
-```
+```bash
 sudo ./ed64log
 ```
 

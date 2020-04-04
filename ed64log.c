@@ -3,10 +3,10 @@
 */
 
 #include <stdio.h>
-#ifdef __APPLE__
-#include <libftdi1/ftdi.h>
-#else
+#ifdef __WINDOWS__
 #include <ftdi.h>
+#else
+#include <libftdi1/ftdi.h>
 #endif
 #include <stdlib.h>
 #include <string.h>
