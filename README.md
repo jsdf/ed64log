@@ -49,10 +49,10 @@ this will output the logs as they are sent from the everdrive
 
 ### using the tool (linux)
 
-install `libftdi` from your package manager of choice. eg for ubuntu:
+install `libftdi` from your package manager of choice (including headers). eg for ubuntu:
 
 ```bash
-sudo apt-get install libftdi1
+sudo apt-get install libftdi1 libftdi1-dev
 ```
 
 compile the ed64log tool from source:
@@ -64,6 +64,7 @@ compile the ed64log tool from source:
 then, to start tailing the logs:
 
 ```bash
+# needs sudo to access usb device
 sudo ./ed64log
 ```
 
