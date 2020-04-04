@@ -20,6 +20,7 @@
 #endif
 
 #ifndef __WINDOWS__
+#include <signal.h>
 volatile sig_atomic_t stop;
 #else
 int stop = 0;

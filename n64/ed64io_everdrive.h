@@ -7,8 +7,7 @@
 
 #ifndef _EVERDRIVE_H
 #define _EVERDRIVE_H
-
-#include <nusys.h>
+ 
 #include "ed64io_types.h"
 
 #define OS_VER "1.29"
