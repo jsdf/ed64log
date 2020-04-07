@@ -8,8 +8,6 @@ enables printf() logging over usb from homebrew games built using the n64 sdk, w
 to implement usb logging in your n64 game:
 
 - copy the sources from the [n64](n64) directory of this repo into your game's source, and add the .c files to your Makefile.
-  this code depends on some library functions provided by NuSystem, so make sure you have configured your Makefile to include the NuSystem library, as described in the n64 sdk docs (eg. it should include `-lnusys` or `-lnusys_d`).
-
 
 - in the initialization of your game, include [ed64io_everdrive.h](n64/ed64io_everdrive.h) and call `evd_init()` to initialize the everdrive hardware for writing.
 
