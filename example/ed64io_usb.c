@@ -1,3 +1,5 @@
+
+
 #include <stdarg.h>
 #include <string.h>
 
@@ -69,7 +71,7 @@ void usbLoggerGetState(UsbLoggerState* res) {
   res->writeError = fifoWriteState.error;
 }
 
-int usbLoggerFlush() {
+int ed64AsyncLoggerFlush() {
   if (!usbLoggerFlushing) {
     if (!usbLoggerOffset) {
       // nothing to write
@@ -148,20 +150,19 @@ void ed64PrintfSync(const char* fmt, ...) {
   va_end(ap);
 }
 
-
-void ed64Assert(int expression)    {                                       
-  if (!(expression)) {                                                  
-    ed64PrintfSync("assertion failed in %s at %s:%d\n", __FUNCTION__,  
-                    __FILE__, __LINE__);                               
-    while (1) {                                                      
-    }                                                                  
+void ed64Assert(int expression) {
+  if (!(expression)) {
+    ed64PrintfSync("assertion failed in %s at %s:%d\n", __FUNCTION__, __FILE__,
+                   __LINE__);
+    while (1) {
+    }
   }
 }
 
-void ed64AssertMsg(int expression, char * msg)    {                                       
-  if (!(expression)) {                                                  
-    ed64PrintfSync(msg);                               
-    while (1) {                                                      
-    }                                                                  
+void ed64AssertMsg(int expression, char* msg) {
+  if (!(expression)) {
+    ed64PrintfSync(msg);
+    while (1) {
+    }
   }
 }
