@@ -150,6 +150,22 @@ void ed64PrintfSync(const char* fmt, ...) {
   va_end(ap);
 }
 
+void ed64PrintfSync2(const char* fmt, ...) {
+  va_list ap;
+
+  va_start(ap, fmt);
+  _Printf((void (*)(void*))_PrintfImplUSBAsync, 0, fmt, ap);
+  va_end(ap);
+  // wait for previous flush to finish, and drain logger buffer
+  while (ed64AsyncLoggerFlush() != -1) {
+    sleep(1);
+  }
+  // flush current and wait
+  while (ed64AsyncLoggerFlush() != -1) {
+    sleep(1);
+  }
+}
+
 void ed64Assert(int expression) {
   if (!(expression)) {
     ed64PrintfSync("assertion failed in %s at %s:%d\n", __FUNCTION__, __FILE__,

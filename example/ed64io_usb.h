@@ -34,4 +34,6 @@ void ed64Printf(const char* fmt, ...);
 
 void ed64PrintfSync(const char* fmt, ...);
 
+void ed64PrintfSync2(const char* fmt, ...);
+
 #endif /* _ED64IO_USB_H */

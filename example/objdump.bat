@@ -1,5 +1,6 @@
 @echo off
 
+
 set startpath=%cd%
 set startdrive=%CD:~0,2%
 
@@ -9,4 +10,5 @@ call setup.bat >NUL
 
 %startdrive%
 cd %startpath%
-exew32 make
+exew32 objdump %OBJDUMPCOMMAND%
+

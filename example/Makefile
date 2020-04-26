@@ -10,16 +10,16 @@ NUSYSLIBDIR  = $(N64KITDIR)/nusys/lib
 LIB = $(ROOT)/usr/lib
 LPR = $(LIB)/PR
 INC = $(ROOT)/usr/include
-CC  = gcc
+CC  = gcc -g -v 
 LD  = ld
 MAKEROM = mild
 
 LCDEFS =	-DNU_DEBUG -DF3DEX_GBI_2
 LCINCS =	-I. -I$(NUSYSINCDIR) -I$(ROOT)/usr/include/PR
 LCOPTS =	-G 0
-LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -lnusys_d -lgultra_d -L$(GCCDIR)/mipse/lib -lkmc
+LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -lnusys_d -lgultra_d -L$(GCCDIR)/mipse/lib -lkmc -g
 
-OPTIMIZER =	-g
+# OPTIMIZER =	-g
 
 APP =		ed64logdemo.out
 

@@ -1,10 +1,9 @@
 
+#include "ed64io_everdrive.h"
 
 #include "ed64io_sys.h"
 
 #include "ed64io_errors.h"
-#include "ed64io_everdrive.h"
-#include "ed64io_types.h"
 #include "ed64io_usb.h"
 
 u16 strcon(u8* str1, u8* str2, u8* dst, u16 max_len) {

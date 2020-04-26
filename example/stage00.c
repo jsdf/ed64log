@@ -2,6 +2,8 @@
 #include <assert.h>
 #include <nusys.h>
 
+#include <PR/os_internal.h>
+
 #include "graphic.h"
 #include "main.h"
 #include "n64logo.h"
@@ -61,9 +63,23 @@ void updateGame00() {
   }
 
   if (contdata[0].trigger & START_BUTTON) {
-    int zero = 0;
+    u32 fpstat;
+
+    /*
+     * Fetch the current floating-point control/status register
+     * Enable divide-by-zero exception for floating point
+     */
+    fpstat = __osGetFpcCsr();
+    __osSetFpcCsr(fpstat | FPCSR_EZ);
     ed64PrintfSync("intentionally causing a fault\n");
-    ed64PrintfSync("d=%d", 1 / zero);
+    {
+      long e1;
+      e1 = *(long*)1;  // TLB exception on load/instruction fetch
+    }
+    // {
+    //   float zero = 0;
+    //   ed64PrintfSync("d=%d", 1 / zero);
+    // }
   }
 
   {
@@ -76,19 +92,18 @@ void updateGame00() {
 
   if (nuScRetraceCounter % 60 == 0) {
     // Non-blocking (async) log call, suitable for frequent logging
-    ed64Printf("retrace=%d", (int)nuScRetraceCounter);
+    ed64Printf("retrace=%d\n", (int)nuScRetraceCounter);
   }
 
-  // ed64AsyncLoggerFlush() needs to be called on a regular interval to pump the
-  // async logging state machine which flushes any pending async logs
-  // (ed64Printf()) via USB (if it's not busy). If you call this every frame you
-  // can log about 128k of logging text every few frames. You can call it more
-  // frequently than once per frame, but subsequent calls need to be spaced out
-  // across the frame time, otherwise they won't do anything, because the
-  // RAM-to-Everdrive and Everdrive-to-USB-Host I/O takes time. If you only use
-  // synchronous logging (ed64PrintfSync()), you don't need to call this
-  // function.
-  ed64AsyncLoggerFlush();
+  // ed64AsyncLoggerFlush() needs to be called on a regular interval to try to
+  // send any pending async (ed64Printf()) logs to the host via USB (if it's not
+  // busy). If you call this every frame you  can log about 128k of logging text
+  // every few frames. You can call it more frequently than once per frame, but
+  // subsequent calls need to be spaced out across the frame time, otherwise
+  // they won't do anything, because the RAM-to-Everdrive and
+  // Everdrive-to-USB-Host I/O takes time. If you only use synchronous logging
+  // (ed64PrintfSync()), you don't need to call this function.
+  // ed64AsyncLoggerFlush();
 }
 
 void makeDL00() {
