@@ -2,6 +2,8 @@
 
 This is a demo app which shows how to use ed64log in an N64 game. The compiled rom can be found [here](ed64logdemo.zip). The logger initialization code is in [main.c](https://github.com/jsdf/ed64log/blob/master/example/main.c#L15-L18), and game code which demonstrates logging is in [stage00.c](stage00.c). If you press the A or B buttons, text will be logged to ed64log.
 
+## Exception logging and disassembly
+
 If you press the C-left or C-right button the app will intentionally cause an exception and crash, printing debug information to ed64log, eg:
 
 ```
