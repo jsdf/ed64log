@@ -1,6 +1,6 @@
 # Example app for ed64log
 
-This is a demo app which shows how to use ed64log in an N64 game. The game-specific code is in [stage00.c](stage00.c). If you press the A or B buttons, text will be logged.
+This is a demo app which shows how to use ed64log in an N64 game. The compiled rom can be found [here](ed64logdemo.zip). The logger initialization code is in [main.c](https://github.com/jsdf/ed64log/blob/master/example/main.c#L15-L18) The game code which demonstrates logging is in [stage00.c](stage00.c). If you press the A or B buttons, text will be logged to ed64log.
 
 If you press the C-left or C-right button the app will intentionally crash, printing debug information to ed64log, eg:
 
@@ -46,5 +46,5 @@ If you already know how to build N64 roms, this is a standard SDK application us
 - Install the n64 sdk. this repo assumes it's in the default location of `C:\ultra` (in the wine filesystem). If you've installed it somewhere else, you'll need to update this path in `compile.bat`
 - Edit `./build.sh` so that WINE_PATH points to your wine binary
 - Run `./build.sh`. This should build ed64logdemo.n64
-- Run ed64logdemo.n64 with an emulator or an N64 flashcart
+- use `./deploy.sh` to deploy the compiled rom to an Everdrive via USB, and start logging. Requires the ed64log client program (from this repository) and [loader64](https://github.com/jsdf/loader64) to be installed
 
