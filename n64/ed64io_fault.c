@@ -12,6 +12,8 @@
 #define PRINTF ed64PrintfSync2
 #define MSG_FAULT 0x10
 
+#define DEBUGPRINT 0
+
 typedef struct {
   u32 mask;
   u32 value;
@@ -194,17 +196,15 @@ static void faultproc(char* argv) {
   static OSThread *curr, *last;
   startedfaultproc = 1;
 
+#if DEBUGPRINT
   PRINTF("=> faultproc started...\n");
-  // osSetEventMesg(OS_EVENT_FAULT, &faultMsgQ, (OSMesg)MSG_FAULT);
-
-  // osSetThreadPri(&faultThread, 1);
+#endif
 
   last = (OSThread*)NULL;
-  // PRINTF("\n=> faultproc - waiting for message...\n");
   (void)osRecvMesg(&faultMsgQ, (OSMesg*)&msg, OS_MESG_BLOCK);
+#if DEBUGPRINT
   PRINTF("=> faultproc - got a fault message...\n");
-  // while (1) {
-  // }
+#endif
 
   /* This routine returns the most recent faulted thread */
   curr = __osGetCurrFaultedThread();
@@ -212,7 +212,9 @@ static void faultproc(char* argv) {
     printFaultData(curr);
   }
 
+#if DEBUGPRINT
   PRINTF("=> faultproc reached end...\n");
+#endif
   while (1) {
   }
 }
@@ -231,12 +233,16 @@ void ed64StartFaultHandlerThread(int mainThreadPri) {
   osCreateThread(&faultThread, /*id*/ 23, (void (*)(void*))faultproc,
                  /*argv*/ NULL, faultThreadStack + ED64IO_FAULT_STACKSIZE / 8,
 
-                 /*priority*/ (OSPri)(/*250*/ mainThreadPri));
+                 /*priority*/ (OSPri)mainThreadPri);
+#if DEBUGPRINT
   PRINTF("=> ed64StartFaultHandlerThread - starting fault thread...\n");
+#endif
   osStartThread(&faultThread);
 
   if (startedfaultproc) {
+#if DEBUGPRINT
     PRINTF("=> returned from osStartThread(&faultThread); state=%d\n",
            faultThread.state);
+#endif
   }
 }

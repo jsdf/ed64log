@@ -2,14 +2,14 @@
 #include <assert.h>
 #include <nusys.h>
 
-#include <PR/os_internal.h>
-
 #include "graphic.h"
 #include "main.h"
 #include "n64logo.h"
 #include "stage00.h"
 
 #include "ed64io_usb.h"
+
+#include <PR/os_internal.h>
 
 Vec3d cameraPos = {-200.0f, -200.0f, -200.0f};
 Vec3d cameraTarget = {0.0f, 0.0f, 0.0f};
@@ -62,24 +62,30 @@ void updateGame00() {
     showN64Logo = FALSE;
   }
 
-  if (contdata[0].trigger & START_BUTTON) {
-    u32 fpstat;
-
-    /*
-     * Fetch the current floating-point control/status register
-     * Enable divide-by-zero exception for floating point
-     */
-    fpstat = __osGetFpcCsr();
-    __osSetFpcCsr(fpstat | FPCSR_EZ);
-    ed64PrintfSync("intentionally causing a fault\n");
+  if (contdata[0].trigger & L_CBUTTONS) {
+    ed64PrintfSync(
+        "intentionally causing TLB exception on load/instruction fetch "
+        "fault\n");
     {
       long e1;
       e1 = *(long*)1;  // TLB exception on load/instruction fetch
     }
-    // {
-    //   float zero = 0;
-    //   ed64PrintfSync("d=%d", 1 / zero);
-    // }
+  }
+  if (contdata[0].trigger & R_CBUTTONS) {
+    ed64PrintfSync("intentionally causing float divide-by-zero fault\n");
+
+    {
+      // Fetch the current floating-point control/status register
+      u32 fpstat = __osGetFpcCsr();
+      // Enable divide-by-zero exception for floating point, so the fault
+      // handler thread can log float divide-by-zero errors
+      __osSetFpcCsr(fpstat | FPCSR_EZ);
+    }
+
+    {
+      float zero = 0;
+      ed64PrintfSync("result=%f\n", 1 / zero);
+    }
   }
 
   {
@@ -103,7 +109,7 @@ void updateGame00() {
   // they won't do anything, because the RAM-to-Everdrive and
   // Everdrive-to-USB-Host I/O takes time. If you only use synchronous logging
   // (ed64PrintfSync()), you don't need to call this function.
-  // ed64AsyncLoggerFlush();
+  ed64AsyncLoggerFlush();
 }
 
 void makeDL00() {

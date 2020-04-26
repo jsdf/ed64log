@@ -7,9 +7,9 @@ enables printf() logging over usb from homebrew games built using the n64 sdk, w
 
 to implement usb logging in your n64 game:
 
-- copy the sources from the [n64](n64) directory of this repo into your game's source, and add the .c files to your Makefile.
+- copy the sources from the [n64](n64) directory of this repo into your game's source, and add the .c files to your Makefile. if you don't intend to use the `ed64StartFaultHandlerThread` function you can omit `ed64io_fault.c`.
 
-- in the initialization of your game, include [ed64io_everdrive.h](n64/ed64io_everdrive.h) and call `evd_init()` to initialize the everdrive hardware for writing.
+- in the initialization of your game, include [ed64io_everdrive.h](n64/ed64io_everdrive.h) and call `evd_init()` to initialize the everdrive hardware for writing. see the [example app](https://github.com/jsdf/ed64log/blob/master/example/main.c).
 
 #### synchronous logging
 - include [ed64io_usb.h](n64/ed64io_usb.h) in your source file and use `ed64PrintfSync()` as you would normally use `printf()` in other programs. note: this will block the thread (eg. temporarily freeze the game) until it finishes logging. this is mainly useful to guarantee that the log message gets through, eg. before a crash/failed assertion, or to test that the logging functionality is working.
@@ -20,6 +20,10 @@ to implement usb logging in your n64 game:
 - up to 512 chars will be buffered. if you log more than that without calling ed64AsyncLoggerFlush, the output will be truncated. if you want to log a lot you wil need to ed64AsyncLoggerFlush() more frequently during a frame. you could even call it on a timer in a background thread. i haven't explored this fully.
 
 you can see an example of implementing logging in a game in this commit to [goose64](https://github.com/jsdf/goose64/commit/cf2259a2b47cd8e2f828ad61a5dd5ddcd2c02986).
+
+#### exception logger
+
+optionally, you can set up an exception handler thread to automatically log details when an exception occurs (eg. invalid memory access) by calling `ed64StartFaultHandlerThread()`, passing the thread priority to run at (typically, the same as the main thread). see the [example app](https://github.com/jsdf/ed64log/blob/master/example/main.c#L17). 
 
 
 ### using the tool (macOS)
@@ -65,26 +69,6 @@ then, to start tailing the logs:
 # needs sudo to access usb device
 sudo ./ed64log
 ```
-
-
-### using the tool (windows) (experimental) (who knows if it works)
-- download the latest [win32 binary](https://jamesfriend.com.au/projects/n64dev/ed64log-win32-latest.zip) or [win64 binary](https://jamesfriend.com.au/projects/n64dev/ed64log-win64-latest.zip).
-
-or
-
-- install gcc (eg. with mingw)
-- clone this repo
-- download and extract [this](https://sourceforge.net/projects/picusb/files/libftdi1-1.4git_devkit_x86_x64_14June2018.zip/download) to `../libftdi` (adjacent to your clone of this repo)
-- run `make.bat` in this repo
-
-
-then, after starting the game on the everdrive, run
-
-```bash
-ed64log.exe
-```
-
-this will output the logs as they are sent from the everdrive
 
 
 ### acknowledgements

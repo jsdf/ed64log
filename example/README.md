@@ -2,7 +2,7 @@
 
 This is a demo app which shows how to use ed64log in an N64 gmae. The game-specific code is in [stage00.c](stage00.c). If you press the A or B buttons, text will be logged.
 
-If you press the start button the app will intentionally crash, printing debug information to ed64log. You can then copy the program counter value (called `epc`) and pass it to the `./disassemble.sh` script, eg.:
+If you press the C-left or C-right button the app will intentionally crash, printing debug information to ed64log. You can then copy the program counter value (called `epc`) and pass it to the `./disassemble.sh` script, eg.:
 
 ```bash
 ./disassemble.sh 0x80025ea0
