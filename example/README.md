@@ -39,8 +39,9 @@ This will output disassembly around the program counter, including the current f
  
 ## How to build (macOS or linux):
 
-If you already know how to build N64 roms, this is a standard SDK application using NuSystem, so build in in the usual way with `make`.
+If you already know how to build N64 roms, this is a standard SDK application using NuSystem, so you can build it in the usual way with `make`.
 
+These are the steps that I use to built it using the N64 SDK installed under Wine:
 
 - Install [wine](https://www.winehq.org/)
 - Install the n64 sdk. this repo assumes it's in the default location of `C:\ultra` (in the wine filesystem). If you've installed it somewhere else, you'll need to update this path in `compile.bat`
