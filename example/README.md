@@ -33,7 +33,7 @@ You can then copy the program counter value (called `epc`) and pass it to the `.
 ./disassemble.sh 0x80025ea0
 ```
 
-This will output disassembly around the program counter, including the current function name:
+This will output disassembly around the program counter, including the current function name (`updateGame00`):
 
 ![disassembly screenshot](disassembly.png)
  
