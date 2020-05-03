@@ -39,7 +39,7 @@ You can then copy the stacktrace list of address (at the bottom), or the program
 
 This will output disassembly around the program counter, including the current function name (`updateGame00`):
 
-![disassembly screenshot](disassembly.png)
+![disassembly screenshot](stacktrace.png)
  
 ## How to build (macOS or linux):
 
