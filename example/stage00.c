@@ -42,6 +42,33 @@ void initStage00() {
   }
 }
 
+void causeTLBFault() {
+  ed64PrintfSync(
+      "intentionally causing TLB exception on load/instruction fetch "
+      "fault\n");
+  {
+    long e1;
+    e1 = *(long*)1;  // TLB exception on load/instruction fetch
+  }
+}
+
+void causeDivideByZeroException() {
+  ed64PrintfSync("intentionally causing float divide-by-zero fault\n");
+
+  {
+    // Fetch the current floating-point control/status register
+    u32 fpstat = __osGetFpcCsr();
+    // Enable divide-by-zero exception for floating point, so the fault
+    // handler thread can log float divide-by-zero errors
+    __osSetFpcCsr(fpstat | FPCSR_EZ);
+  }
+
+  {
+    float zero = 0;
+    ed64PrintfSync("result=%f\n", 1 / zero);
+  }
+}
+
 void updateGame00() {
   nuContDataGetEx(contdata, 0);
   if (contdata[0].trigger & A_BUTTON) {
@@ -63,29 +90,10 @@ void updateGame00() {
   }
 
   if (contdata[0].trigger & L_CBUTTONS) {
-    ed64PrintfSync(
-        "intentionally causing TLB exception on load/instruction fetch "
-        "fault\n");
-    {
-      long e1;
-      e1 = *(long*)1;  // TLB exception on load/instruction fetch
-    }
+    causeTLBFault();
   }
   if (contdata[0].trigger & R_CBUTTONS) {
-    ed64PrintfSync("intentionally causing float divide-by-zero fault\n");
-
-    {
-      // Fetch the current floating-point control/status register
-      u32 fpstat = __osGetFpcCsr();
-      // Enable divide-by-zero exception for floating point, so the fault
-      // handler thread can log float divide-by-zero errors
-      __osSetFpcCsr(fpstat | FPCSR_EZ);
-    }
-
-    {
-      float zero = 0;
-      ed64PrintfSync("result=%f\n", 1 / zero);
-    }
+    causeDivideByZeroException();
   }
 
   {

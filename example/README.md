@@ -9,30 +9,32 @@ If you press the C-left or C-right button the app will intentionally cause an ex
 ```
 Fault in thread 4:
 
-epc   0x80025ea0
+epc   0x80025dac
 cause   0x00000010 <Address error on load or instruction fetch>
 sr    0x2000ff03 <CU1,IM8,IM7,IM6,IM5,IM4,IM3,IM2,IM1,KER,EXL,IE>
 badvaddr  0x00000001
 
 register contents:
 at 0xffffffff80050000 v0 0x0000000000000044 v1 0x0000000000000000
-a0 0x0000000000000000 a1 0x00000000003d245b a2 0x0000000000000000
-a3 0x0000000000000000 t0 0x00000000003d0f84 t1 0x0000000000000a98
+a0 0x0000000000000000 a1 0x00000000029ba5fc a2 0x0000000000000000
+a3 0x0000000000000000 t0 0x000000000299df6a t1 0x0000000000000220
 t2 0x0000000000000000 t3 0x000000000000ff00 t4 0x0000000000000000
-t5 0xffffffff8003cb38 t6 0x0000000000000000 t7 0x0000000000000000
+t5 0xffffffff8003cf98 t6 0x0000000000000000 t7 0x0000000000000000
 s0 0x0000000000000000 s1 0x0000000000000000 s2 0x0000000000000000
 s3 0x0000000000000000 s4 0x0000000000000000 s5 0x0000000000000000
 s6 0x0000000000000000 s7 0x0000000000000000 t8 0x0000000000000000
-t9 0x00000000000fffff gp 0x0000000000000000 sp 0xffffffff800e1578
-ra 0xffffffff80025ea0
+t9 0x00000000000fffff gp 0x0000000000000000 sp 0xffffffff800e1b78
+ra 0xffffffff80025dac
 
 fpcsr   0x01000804 <FS,EV,FI,RN>
+stacktrace:
+80025dac 80025dac 80025f3c 800268b0 8002cb78 8003b340 
 ```
 
-You can then copy the program counter value (called `epc`) and pass it to the `./disassemble.sh` script, eg.:
+You can then copy the stacktrace list of address (at the bottom), or the program counter (labelled `epc`), and pass it to the `./disassemble.sh` script, eg.:
 
 ```bash
-./disassemble.sh 0x80025ea0
+./disassemble.sh 80025dac 80025dac 80025f3c 800268b0 8002cb78 8003b340
 ```
 
 This will output disassembly around the program counter, including the current function name (`updateGame00`):
