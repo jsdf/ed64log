@@ -37,7 +37,7 @@ You can then copy the stacktrace list of address (at the bottom), or the program
 ./disassemble.sh 80025dac 80025dac 80025f3c 800268b0 8002cb78 8003b340
 ```
 
-This will output disassembly around the program counter, including the current function name (`updateGame00`):
+This will output disassembly around the program counter, including the current function name (`causeTLBFault`) and stack trace (`updateGame00`, `stage00`, `gfxThread`, etc):
 
 ![disassembly screenshot](stacktrace.png)
  
