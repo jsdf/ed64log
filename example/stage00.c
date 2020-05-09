@@ -69,6 +69,11 @@ void causeDivideByZeroException() {
   }
 }
 
+void causeOSError() {
+  // cause an os error
+  osSetThreadPri(&nuGfxThread, /*invalid thread priority*/ -1);
+}
+
 void updateGame00() {
   nuContDataGetEx(contdata, 0);
   if (contdata[0].trigger & A_BUTTON) {
@@ -94,6 +99,9 @@ void updateGame00() {
   }
   if (contdata[0].trigger & R_CBUTTONS) {
     causeDivideByZeroException();
+  }
+  if (contdata[0].trigger & U_CBUTTONS) {
+    causeOSError();
   }
 
   {

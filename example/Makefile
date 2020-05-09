@@ -28,9 +28,8 @@ APP =		ed64logdemo.out
 TARGETS =	ed64logdemo.n64
 
 HFILES =	graphic.h
-
-ED64CODEFILES = ed64io_usb.c ed64io_sys.c ed64io_everdrive.c
-CODEFILES   = 	main.c stage00.c graphic.c gfxinit.c  $(wildcard ed64io_*.c) # $(ED64CODEFILES)
+ 
+CODEFILES   = 	main.c stage00.c graphic.c gfxinit.c  $(wildcard ed64io_*.c)
 
 CODEOBJECTS =	$(CODEFILES:.c=.o)  $(NUSYSLIBDIR)/nusys.o
 

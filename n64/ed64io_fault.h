@@ -4,9 +4,7 @@
 
 #include <ultra64.h>
 
-
-#define ED64IO_FAULT_STACKSIZE 0x2000
-#define ED64IO_FAULT_DMA_QUEUE_SIZE 200
+#define ED64IO_FAULT_STACKSIZE 0x200
 
 void ed64StartFaultHandlerThread(int mainThreadPri);
 

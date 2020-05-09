@@ -40,6 +40,10 @@ You can then copy the stacktrace list of address (at the bottom), or the program
 This will output disassembly around the program counter, including the current function name (`causeTLBFault`) and stack trace (`updateGame00`, `stage00`, `gfxThread`, etc):
 
 ![disassembly screenshot](stacktrace.png)
+
+# N64 OS error logging
+
+Press the C-up button to cause an error in a libultra function (osSetThreadPri). This demonstrates the ed64RegisterOSErrorHandler() function.
  
 ## How to build (macOS or linux):
 

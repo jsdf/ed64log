@@ -5,8 +5,8 @@
 #include "ed64io_everdrive.h"
 
 #include "ed64io_fault.h"
+#include "ed64io_os_error.h"
 #include "ed64io_usb.h"
-
 
 NUContData contdata[1];  // storage for controller 1 inputs
 
@@ -16,6 +16,9 @@ void mainproc(void) {
 
   // start thread which will catch and log errors
   ed64StartFaultHandlerThread(NU_MAIN_THREAD_PRI);
+
+  // register libultra error handler
+  ed64RegisterOSErrorHandler();
 
   // initialize the graphics system
   nuGfxInit();

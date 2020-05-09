@@ -26,6 +26,10 @@ you can see an example of implementing logging in a game in this commit to [goos
 optionally, you can set up an exception handler thread to automatically log details when an exception occurs (eg. invalid memory access) by calling `ed64StartFaultHandlerThread()`, passing the thread priority to run at (typically, the same as the main thread) [like this](https://github.com/jsdf/ed64log/blob/master/example/main.c#L17). for usage details, see the [example app readme](https://github.com/jsdf/ed64log/tree/master/example#exception-logging-and-disassembly).
 
 
+#### OS error logger
+
+optionally, you can override the default N64 OS error handler which prints errors in calls to libultra functions to osSyncPrintf, with one that prints to ed64SyncPrintf instead, by calling `ed64RegisterOSErrorHandler()` once in the initialization of your progam.
+
 ### using the tool (macOS)
 
 install required libraries from homebrew:
