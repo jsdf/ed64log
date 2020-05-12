@@ -121,8 +121,8 @@ void dma_write_s(void* ram_address,
   evdPiWriteRom(pi_address, ram_address, len);
 }
 
-// blocking sleep
-void sleep(u32 ms) {
+// blocking evd_sleep
+void evd_sleep(u32 ms) {
   u32 current_ms = OS_CYCLES_TO_USEC(osGetTime()) / 1000.0;
 
   while ((OS_CYCLES_TO_USEC(osGetTime()) / 1000.0) - current_ms < ms)

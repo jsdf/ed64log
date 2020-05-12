@@ -18,11 +18,7 @@ typedef struct {
   u32 mask;
   u32 value;
   char* string;
-} regDesc_t;
-
-static char errMessage[256];
-static char* errFmtEntry[65536];
-static char* logFmtEntry[65536];
+} regDesc_t; 
 
 #define MAX_STACK_TRACE 100
 
@@ -336,6 +332,4 @@ void ed64SendFaultMessage(OSThread* t) {
   faultEventMsg = (OSMesg)t;
   osSendMesg(&faultMsgQ, faultEventMsg, OS_MESG_NOBLOCK);
   faultEventMsg = NULL;
-  sleep(1000);
-  PRINTF("done");
 }

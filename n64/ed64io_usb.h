@@ -8,9 +8,7 @@
 #ifndef _ED64IO_USB_H
 #define _ED64IO_USB_H
 
-
 #include <stdarg.h>
-
 
 #include "ed64io_types.h"
 int usbLoggerLog(const char* str);
@@ -40,6 +38,6 @@ void ed64PrintfSync(const char* fmt, ...);
 
 void ed64PrintfSync2(const char* fmt, ...);
 
-void ed64VPrintfSync2(const char* fmt, va_list ap) ;
+void ed64VPrintfSync2(const char* fmt, va_list ap);
 
 #endif /* _ED64IO_USB_H */

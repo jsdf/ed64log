@@ -157,11 +157,11 @@ void ed64PrintfSync2(const char* fmt, ...) {
   va_end(ap);
   // wait for previous flush to finish, and drain logger buffer
   while (ed64AsyncLoggerFlush() != -1) {
-    sleep(1);
+    evd_sleep(1);
   }
   // flush current and wait
   while (ed64AsyncLoggerFlush() != -1) {
-    sleep(1);
+    evd_sleep(1);
   }
 }
 
