@@ -1,0 +1,23 @@
+{
+  "name": "ed64debugger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dbgif.js",
+  "scripts": {
+    "dev": "vite serve src",
+    "build": "vite build src --outDir dist "
+  },
+  "author": "James Friend <james@jsdf.co> (http://jsdf.co/)",
+  "license": "ISC",
+  "dependencies": {
+    "@pika/react": "^16.13.1",
+    "@pika/react-dom": "^16.13.1",
+    "elf-tools": "^1.1.1",
+    "serialport": "^9.0.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0"
+  },
+  "devDependencies": {
+    "vite": "^0.15.0"
+  }
+}
