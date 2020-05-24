@@ -1,43 +1,123 @@
 const http = require('http');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
+const getPort = require('get-port');
+const express = require('express');
+const socketio = require('socket.io');
+const fs = require('fs');
+
 const DebuggerInterface = require('./dbgif');
 
-const dbgif = new DebuggerInterface();
-dbgif.start();
+const uiRoot = 'debugger-ui/dist';
+const objdump = process.env.OBJDUMP_PATH || 'mips64-elf-objdump';
+const appBinary = process.env.APP_BINARY_PATH || '../example/ed64logdemo.out';
 
-function streamToPromise(stream) {
-  return new Promise((resolve, reject) => {
-    let data = '';
-    stream.on('data', (chunk) => {
-      data += chunk.toString();
-    });
-    stream.on('end', () => {
-      resolve(data);
-    });
-    stream.on('error', (err) => {
-      reject(err);
-    });
-  });
+const app = express();
+const server = http.Server(app);
+const io = socketio(server);
+app.use(express.static(uiRoot));
+
+// a synchronously inspectable promise wrapper
+class Future {
+  state = 'pending';
+  value = null;
+  error = null;
+
+  constructor(promise) {
+    this.promise = promise;
+    promise
+      .then((value) => {
+        this.state = 'fulfilled';
+        this.value = value;
+      })
+      .catch((err) => {
+        this.state = 'rejected';
+        this.error = err;
+      });
+  }
+}
+
+function parseDisassembly(buffer) {
+  const codeStart = buffer.indexOf('Disassembly of section ..code');
+  if (codeStart == -1) {
+    throw new Error(`couldn't parse disassembly`);
+  }
+  const result = {};
+  const lines = buffer.slice(codeStart).split('\n');
+
+  let errors = 0;
+  for (const line of lines) {
+    if (line[0] != '8') {
+      // n64 kseg0 addresses start with '8'
+      continue;
+    }
+    const address = line.slice(0, 8);
+    const matches = line.slice(9).match(/\<(\w+)(\+\w+)?\>\s(.*)/);
+    if (matches) {
+      const [input, fnName, offset, disasm] = matches;
+
+      result[address] = {
+        fnName,
+        offset,
+        disasm,
+      };
+    } else {
+      if (errors < 10) {
+        console.log('failed to parse', line.slice(9));
+      }
+      errors++;
+    }
+  }
+  return result;
 }
 
 class Server {
   dbgif = null;
 
-  // debugger state
-  threads = {};
-  httpServer = null;
-  atBreakpoint = false;
+  disassembly = null;
 
-  constructor(dbgif) {
-    this.dbgif = dbgif;
-    this.attachHandlers(dbgif);
+  // debugger state
+  state = {
+    threads: {},
+    atBreakpoint: null,
+    serverErrors: [],
+  };
+
+  setState(stateUpdate) {
+    Object.assign(this.state, stateUpdate);
+    fs.writeFile(
+      'laststate.json',
+      JSON.stringify(this.state),
+      {encoding: 'utf8'},
+      () => {}
+    );
+    io.emit('state', this.state);
   }
 
-  attachHandlers(dbgif) {
+  handleError(message, error) {
+    this.state.serverErrors.push({message, error});
+    console.error(message, error);
+  }
+
+  attachDebuggerInferfaceHandlers(dbgif) {
     dbgif.on('break', (threadID) => {
-      this.atBreakpoint = true;
+      this.setState({
+        atBreakpoint: threadID,
+      });
     });
     dbgif.on('threadstate', (threadState) => {
-      this.threads[threadState.id] = threadState;
+      this.setState({
+        threads: {
+          ...this.state.threads,
+          [threadState.id]: threadState,
+        },
+      });
+    });
+    dbgif.on('trace', (line) => {
+      io.emit('log', `TRACE=[${line.length - 6} bytes]`);
+    });
+    dbgif.on('log', (line) => {
+      io.emit('log', line);
     });
   }
 
@@ -46,51 +126,115 @@ class Server {
       case 'b':
       case 's':
       case 'r':
-        this.atBreakpoint = false;
+        this.setState({
+          atBreakpoint: null,
+        });
+        break;
     }
     this.dbgif.sendCommand(cmd, data);
   }
 
-  startServer(port) {
-    if (this.httpServer) {
-      throw new Error('server already started');
+  attachClientHandlers(socket) {
+    // send current state on connect
+    socket.emit('state', this.state);
+
+    // subscribe to handle commands send from client
+    socket.on('cmd', ({cmd, data}) => {
+      this.handleCommand(cmd, data);
+    });
+  }
+
+  async startServer(httpPort) {
+    const dbgif = new DebuggerInterface();
+    this.dbgif = dbgif;
+
+    try {
+      await dbgif.start();
+      this.attachDebuggerInferfaceHandlers(dbgif);
+    } catch (err) {
+      if (process.env.NODE_ENV === 'development') {
+        // proceed without serial connection, for ui development purposes
+        console.error(
+          'unable to open serial port to ftdi device, is it connected?'
+        );
+
+        // load last state
+        try {
+          Object.assign(
+            this.state,
+            JSON.parse(fs.readFileSync('laststate.json', {encoding: 'utf8'}))
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        throw new Error(
+          'unable to open serial port to ftdi device, is it connected?'
+        );
+      }
     }
-    this.httpServer = http.createServer(async (req, res) => {
-      try {
-        let responseData = null;
-        const requestBody = await streamToPromise(req);
-        let requestBodyData = null;
-        if (requestBody.length) {
-          requestBodyData = JSON.parse(requestBody);
-        }
-        switch (req.url) {
-          case '/threads':
-            responseData = this.threads;
-            break;
-          case '/command':
-            this.handleCommand(requestBodyData.cmd, requestBodyData.data);
-            break;
-          default:
-            console.log(`404 ${req.url}`);
-            res.writeHead(404, {'Content-Type': 'text/plain'});
-            res.write('404 not found');
-            return res.end();
-        }
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        res.write(JSON.stringify(responseData));
-        return res.end();
-      } catch (err) {
-        console.log(`503 ${req.url} ${err}`);
-        res.writeHead(503, {'Content-Type': 'text/plain'});
-        res.write(err.stack);
-        return res.end();
+
+    server.listen(httpPort);
+
+    app.get('/', (req, res) => {
+      if (process.env.NODE_ENV === 'development') {
+        res.redirect(301, `http://127.0.0.1:3000/?port=${httpPort}`);
+      } else {
+        res.sendFile(path.join(__dirname, uiRoot, 'index.html'));
       }
     });
-    this.httpServer.listen(port);
 
-    console.log(`server running at http://127.0.0.1:${port}`);
+    app.get('/disassembly', (req, res) => {
+      const future = this.getDisassembly();
+
+      res.set('Access-Control-Allow-Origin', '*');
+
+      future.promise
+        .then((result) => {
+          res.status(200).send(result);
+        })
+        .catch((err) => {
+          res
+            .status(503)
+            .type('text')
+            .send(err.stack);
+        });
+    });
+
+    io.on('connection', (socket) => {
+      this.attachClientHandlers(socket);
+    });
+
+    console.log(`server running at http://127.0.0.1:${httpPort}`);
+    if (process.env.NODE_ENV === 'development') {
+      exec(`open http://127.0.0.1:${httpPort}/`);
+    }
+  }
+
+  getDisassembly() {
+    if (this.disassembly == null) {
+      const promise = exec(
+        `${objdump} --disassemble   --prefix-addresses  --wide ${appBinary}`,
+        {
+          maxBuffer: 1024 * 1024 * 16, // 16mb
+        }
+      )
+        .then(({stdout, stderr}) => {
+          return parseDisassembly(stdout);
+        })
+        .catch((err) => {
+          this.handleError('failed to get disassembly using objdump', err);
+        });
+      this.disassembly = new Future(promise);
+    }
+
+    return this.disassembly;
   }
 }
 
-const server = new Server(dbgif);
-server.startServer(9001);
+getPort()
+  .then((httpPort) => new Server().startServer(httpPort))
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });

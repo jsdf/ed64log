@@ -14,11 +14,9 @@ function trimNullBytes(data) {
 }
 
 class DebuggerInterface extends EventEmitter {
-  async start() {
-    if (this.port) {
-      throw new Error('already started DebuggerInterface');
-    }
+  port = null;
 
+  async getSerialPort() {
     const portInfos = await SerialPort.list();
     const ftdiPortInfo = portInfos.find(
       (info) => info.vendorId === '0403' && info.productId === '6001'
@@ -53,6 +51,12 @@ class DebuggerInterface extends EventEmitter {
       });
     });
   }
+  async start() {
+    if (this.port) {
+      throw new Error('already started DebuggerInterface');
+    }
+    this.port = await this.getSerialPort();
+  }
 
   attachParser() {
     const port = this.port;
@@ -78,13 +82,17 @@ class DebuggerInterface extends EventEmitter {
             stateName,
             priority,
             pc,
-            stacktrace,
+            stacktrace: [...new Set(stacktrace)],
           });
         }
       } else if (line.startsWith('TRACE=')) {
-        console.log(`TRACE=[${line.length - 6} bytes]`);
+        this.emit('trace', line);
       } else {
-        process.stdout.write(line + '\n');
+        this.emit('log', line);
+      }
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log(line);
       }
     };
 
@@ -129,6 +137,9 @@ class DebuggerInterface extends EventEmitter {
       msg.writeUInt32BE(data, 5);
     }
     console.log('sending', trimNullBytes(msg));
-    port.write(msg);
+
+    this.port.write(msg);
   }
 }
+
+module.exports = DebuggerInterface;

@@ -1,0 +1,27 @@
+* {
+  box-sizing: border-box;
+}
+
+.threads-grid {
+  display: grid;
+  grid-gap: 10px;
+  width: 90vw;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-rows: repeat(auto-fit, minmax(300px, 1fr));
+  /*grid-auto-flow: column;*/
+}
+.pane-thread {
+  width: 70vw;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: solid 1px #ccc;
+  margin: 8px;
+  padding: 8px;
+}
+.pane-log {
+  width: 30vw;
+  overflow: hidden;
+  border: solid 1px #ccc;
+  margin: 8px;
+  padding: 8px;
+}

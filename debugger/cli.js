@@ -8,6 +8,12 @@ dbgif.start();
 dbgif.on('break', () => {
   breakpointPrompt(dbgif);
 });
+dbgif.on('trace', (line) => {
+  console.log(`TRACE=[${line.length - 6} bytes]`);
+});
+dbgif.on('log', (line) => {
+  process.stdout.write(line + '\n');
+});
 
 function parseAndSendCommand(dbgif, cmdText) {
   const cmdType = cmdText.trim()[0];
