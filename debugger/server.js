@@ -42,7 +42,8 @@ function parseDisassembly(buffer) {
   if (codeStart == -1) {
     throw new Error(`couldn't parse disassembly`);
   }
-  const result = {};
+  const addresses = {};
+  const functions = {};
   const lines = buffer.slice(codeStart).split('\n');
 
   let errors = 0;
@@ -56,11 +57,16 @@ function parseDisassembly(buffer) {
     if (matches) {
       const [input, fnName, offset, disasm] = matches;
 
-      result[address] = {
+      addresses[address] = {
         fnName,
         offset,
         disasm,
       };
+
+      if (fnName) {
+        functions[fnName] = functions[fnName] || [];
+        functions[fnName].push(address);
+      }
     } else {
       if (errors < 10) {
         console.log('failed to parse', line.slice(9));
@@ -68,7 +74,7 @@ function parseDisassembly(buffer) {
       errors++;
     }
   }
-  return result;
+  return {addresses, functions};
 }
 
 class Server {

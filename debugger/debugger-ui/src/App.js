@@ -62,6 +62,66 @@ function Log({logItems}) {
   );
 }
 
+function Disassembly({currentAddress, disassembly}) {
+  const dataForAddress = disassembly.addresses[currentAddress];
+  const addrsForFn =
+    dataForAddress && dataForAddress.fnName
+      ? disassembly.functions[dataForAddress.fnName]
+      : null;
+
+  if (!addrsForFn) {
+    if (dataForAddress) {
+      return (
+        <div>
+          {currentAddress}: {dataForAddress.disasm} (fnName not found)
+        </div>
+      );
+    } else {
+      return <div>{currentAddress}: (dataForAddress not found)</div>;
+    }
+  }
+  const addrsForFnSorted = addrsForFn
+    .slice(0)
+    .sort((a, b) => parseInt(a, 16) - parseInt(b, 16));
+  const posInAddrs = addrsForFnSorted.indexOf(currentAddress);
+  const addrForContext = addrsForFnSorted.slice(
+    Math.max(0, posInAddrs - 5),
+    Math.min(addrsForFnSorted.length, posInAddrs + 6)
+  );
+  return (
+    <div style={{border: 'solid 1px black'}}>
+      {addrForContext.map((addr) => {
+        const dataForAddr = disassembly.addresses[addr];
+
+        let result = null;
+        if (!dataForAddr) {
+          result = <span>{addr}: unknown</span>;
+        } else {
+          // table row
+          // TODO: render as columns
+          result = (
+            <div key={addr} style={{overflow: 'hidden', whiteSpace: 'nowrap'}}>
+              <span style={{display: 'inline-block', width: 60}}>
+                {dataForAddr.offset}
+              </span>{' '}
+              <span title={dataForAddr.disasm}>{dataForAddr.disasm}</span>
+            </div>
+          );
+        }
+
+        return (
+          <div
+            key={addr}
+            style={{color: addr === currentAddress ? 'red' : null}}
+          >
+            {result}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function Stacktrace({pc, stacktrace}) {
   const [disassembly, setDisassembly] = useState(null);
   useEffect(() => {
@@ -79,23 +139,32 @@ function Stacktrace({pc, stacktrace}) {
   }, []);
 
   if (disassembly) {
-    const pcData = disassembly[stacktrace[0]];
+    const pc = stacktrace[0];
+    const pcData = disassembly.addresses[pc];
     return (
       <div style={{overflow: 'auto'}}>
-        {stacktrace[0] && (
-          <div key={stacktrace[0]}>
-            <div>{pcData && pcData.disasm}</div>
-
+        {pc && (
+          <div key={pc}>
             <div>{pcData && `at: ${pcData.fnName}${pcData.offset}`}</div>
+            <Disassembly currentAddress={pc} disassembly={disassembly} />
           </div>
         )}
         {stacktrace.slice(1).map((stackframe) => {
-          const frameData = disassembly[stackframe];
+          const frameData = disassembly.addresses[stackframe];
           return (
             <div key={stackframe}>
-              {frameData
-                ? `in: ${frameData.fnName}`
-                : `in: [unknown function at ${stackframe}]`}
+              <details>
+                <summary>
+                  {frameData
+                    ? `in: ${frameData.fnName}`
+                    : `in: [unknown function at ${stackframe}]`}
+                </summary>
+
+                <Disassembly
+                  currentAddress={stackframe}
+                  disassembly={disassembly}
+                />
+              </details>
             </div>
           );
         })}
@@ -113,19 +182,24 @@ const Threads = React.memo(function Threads({threads, threadIDAtBreak, api}) {
         .sort((a, b) => a.id - b.id)
         .map((thread) => (
           <div key={thread.id}>
-            <h3>thread {thread.id}</h3>
+            <h3 style={{height: 24, overflow: 'hidden', margin: '8px 0 0 0'}}>
+              thread {thread.id}
+              {thread.id === threadIDAtBreak && (
+                <span>
+                  {' '}
+                  <button onClick={() => api.sendCommand('s')}>step</button>
+                  <button onClick={() => api.sendCommand('r')}>run</button>
+                </span>
+              )}
+            </h3>
+            <div style={{fontSize: 12, height: '1.2em', fontStyle: 'italic'}}>
+              {' '}
+              {thread.id === threadIDAtBreak && '(at breakpoint)'}{' '}
+            </div>
             <div>state: {thread.stateName}</div>
             <div>priority: {thread.priority}</div>
-            {thread.id === threadIDAtBreak && (
-              <div>
-                at breakpoint:
-                <button onClick={() => api.sendCommand('s')}>step</button>
-                <button onClick={() => api.sendCommand('r')}>run</button>
-              </div>
-            )}
             <div>pc: {thread.pc}</div>
             <div>
-              stack:
               <Stacktrace pc={thread.pc} stacktrace={thread.stacktrace} />
             </div>
           </div>
