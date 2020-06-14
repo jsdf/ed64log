@@ -145,7 +145,14 @@ function Stacktrace({pc, stacktrace}) {
       <div style={{overflow: 'auto'}}>
         {pc && (
           <div key={pc}>
-            <div>{pcData && `at: ${pcData.fnName}${pcData.offset}`}</div>
+            <div>
+              {pcData && (
+                <span>
+                  at: <b>{pcData.fnName}</b>
+                  {pcData.offset}
+                </span>
+              )}
+            </div>
             <Disassembly currentAddress={pc} disassembly={disassembly} />
           </div>
         )}
@@ -175,34 +182,42 @@ function Stacktrace({pc, stacktrace}) {
   return 'loading...';
 }
 
+const Thread = React.memo(function Thread({thread, threadIDAtBreak, api}) {
+  return (
+    <div>
+      <h3 style={{height: 24, overflow: 'hidden', margin: '8px 0 0 0'}}>
+        thread {thread.id}
+        {api && threadIDAtBreak && thread.id === threadIDAtBreak && (
+          <span>
+            {' '}
+            <button onClick={() => api.sendCommand('s')}>step</button>
+            <button onClick={() => api.sendCommand('r')}>run</button>
+          </span>
+        )}
+      </h3>
+      <div style={{fontSize: 12, height: '1.2em', fontStyle: 'italic'}}>
+        {' '}
+        {threadIDAtBreak &&
+          thread.id === threadIDAtBreak &&
+          '(at breakpoint)'}{' '}
+      </div>
+      <div>state: {thread.stateName}</div>
+      <div>priority: {thread.priority}</div>
+      <div>pc: {thread.pc}</div>
+      <div>
+        <Stacktrace pc={thread.pc} stacktrace={thread.stacktrace} />
+      </div>
+    </div>
+  );
+});
+
 const Threads = React.memo(function Threads({threads, threadIDAtBreak, api}) {
   return (
     <div className="threads-grid">
       {Object.values(threads)
         .sort((a, b) => a.id - b.id)
         .map((thread) => (
-          <div key={thread.id}>
-            <h3 style={{height: 24, overflow: 'hidden', margin: '8px 0 0 0'}}>
-              thread {thread.id}
-              {thread.id === threadIDAtBreak && (
-                <span>
-                  {' '}
-                  <button onClick={() => api.sendCommand('s')}>step</button>
-                  <button onClick={() => api.sendCommand('r')}>run</button>
-                </span>
-              )}
-            </h3>
-            <div style={{fontSize: 12, height: '1.2em', fontStyle: 'italic'}}>
-              {' '}
-              {thread.id === threadIDAtBreak && '(at breakpoint)'}{' '}
-            </div>
-            <div>state: {thread.stateName}</div>
-            <div>priority: {thread.priority}</div>
-            <div>pc: {thread.pc}</div>
-            <div>
-              <Stacktrace pc={thread.pc} stacktrace={thread.stacktrace} />
-            </div>
-          </div>
+          <Thread key={thread.id} {...{thread, threadIDAtBreak, api}} />
         ))}
     </div>
   );
@@ -210,8 +225,10 @@ const Threads = React.memo(function Threads({threads, threadIDAtBreak, api}) {
 
 function App() {
   const [state, setState] = useState(null);
+  const [clientErrors, setClientErrors] = useState([]);
   const [logItems, setLogItems] = useState([]);
 
+  let lastActiveThreadRef = useRef(null);
   let apiRef = useRef(null);
 
   useEffect(() => {
@@ -223,6 +240,24 @@ function App() {
     socket.on('log', (newLogItem) => {
       setLogItems((logItems) => logItems.concat(newLogItem));
     });
+    socket.on('disconnect', () => {
+      console.log('got disconnect message');
+      setClientErrors((prev) =>
+        prev.concat({
+          message: 'disconnected',
+          error: null,
+        })
+      );
+    });
+    socket.on('error', (error) => {
+      console.log('got error message', error);
+      setClientErrors((prev) =>
+        prev.concat({
+          message: 'io error',
+          error: error,
+        })
+      );
+    });
 
     apiRef.current = {
       sendCommand(cmd, data) {
@@ -231,21 +266,40 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    // cached copy of the last active thread to use when not at breakpoint
+    if (state && state.atBreakpoint) {
+      lastActiveThreadRef.current = state.atBreakpoint;
+    }
+  }, [state && state.atBreakpoint]);
+
   if (!state) {
     return <div style={{margin: 100}}>awaiting initial state...</div>;
   }
 
+  const activeThread =
+    state.threads[state.atBreakpoint || lastActiveThreadRef.current] ||
+    Object.values(state.threads)[0];
+
   return (
     <div>
-      {state.serverErrors && (
-        <div style={{backgroundColor: 'red', color: 'white'}}>
-          {state.serverErrors.map(({message, error}, i) => (
-            <div>{message}</div>
-          ))}
-        </div>
-      )}
+      <div style={{backgroundColor: 'red', color: 'white'}}>
+        {clientErrors.concat(state.serverErrors).map(({message, error}, i) => (
+          <div key={i}>{message}</div>
+        ))}
+      </div>
       <div style={{display: 'flex'}}>
         <div className="pane-thread">
+          <h2>active thread</h2>
+          {activeThread && (
+            <div className="thread">
+              <Thread
+                thread={activeThread}
+                threadIDAtBreak={state.atBreakpoint}
+                api={apiRef.current}
+              />
+            </div>
+          )}
           <h2>threads</h2>
           <Threads
             threads={state.threads}

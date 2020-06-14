@@ -10,7 +10,9 @@ void initStage00();
 void drawSquare();
 void drawN64Logo();
 
+void breakInThisFunction();
+void causeTLBFault();
+void causeDivideByZeroException();
+void causeOSError();
+
 #endif /* _STAGE00_H_ */
-
-
-

@@ -14,11 +14,11 @@ void mainproc(void) {
   // start everdrive communication
   evd_init();
 
-  // start thread which will catch and log errors
-  ed64StartFaultHandlerThread(NU_MAIN_THREAD_PRI);
-
   // register libultra error handler
   ed64RegisterOSErrorHandler();
+
+  // start thread which will catch and log errors
+  ed64StartFaultHandlerThread(NU_GFX_TASKMGR_THREAD_PRI);
 
   // initialize the graphics system
   nuGfxInit();

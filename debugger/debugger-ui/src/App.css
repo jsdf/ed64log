@@ -5,10 +5,13 @@
 .threads-grid {
   display: grid;
   grid-gap: 10px;
-  width: 90vw;
+  width: 100%;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-template-rows: repeat(auto-fit, minmax(300px, 1fr));
   /*grid-auto-flow: column;*/
+}
+.thread {
+  width: 300px;
 }
 .pane-thread {
   width: 70vw;

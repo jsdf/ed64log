@@ -17,26 +17,6 @@ const server = http.Server(app);
 const io = socketio(server);
 app.use(express.static(uiRoot));
 
-// a synchronously inspectable promise wrapper
-class Future {
-  state = 'pending';
-  value = null;
-  error = null;
-
-  constructor(promise) {
-    this.promise = promise;
-    promise
-      .then((value) => {
-        this.state = 'fulfilled';
-        this.value = value;
-      })
-      .catch((err) => {
-        this.state = 'rejected';
-        this.error = err;
-      });
-  }
-}
-
 function parseDisassembly(buffer) {
   const codeStart = buffer.indexOf('Disassembly of section ..code');
   if (codeStart == -1) {
@@ -69,7 +49,7 @@ function parseDisassembly(buffer) {
       }
     } else {
       if (errors < 10) {
-        console.log('failed to parse', line.slice(9));
+        // console.log('failed to parse', line.slice(9));
       }
       errors++;
     }
@@ -80,7 +60,7 @@ function parseDisassembly(buffer) {
 class Server {
   dbgif = null;
 
-  disassembly = null;
+  disassemblyPromise = null;
 
   // debugger state
   state = {
@@ -125,6 +105,9 @@ class Server {
     dbgif.on('log', (line) => {
       io.emit('log', line);
     });
+    dbgif.on('error', (err) => {
+      this.handleError('debugger interface error', err);
+    });
   }
 
   handleCommand(cmd, data) {
@@ -158,6 +141,7 @@ class Server {
       await dbgif.start();
       this.attachDebuggerInferfaceHandlers(dbgif);
     } catch (err) {
+      console.error(err);
       if (process.env.NODE_ENV === 'development') {
         // proceed without serial connection, for ui development purposes
         console.error(
@@ -191,11 +175,11 @@ class Server {
     });
 
     app.get('/disassembly', (req, res) => {
-      const future = this.getDisassembly();
+      const promise = this.getDisassembly();
 
       res.set('Access-Control-Allow-Origin', '*');
 
-      future.promise
+      promise
         .then((result) => {
           res.status(200).send(result);
         })
@@ -218,7 +202,7 @@ class Server {
   }
 
   getDisassembly() {
-    if (this.disassembly == null) {
+    if (this.disassemblyPromise == null) {
       const promise = exec(
         `${objdump} --disassemble   --prefix-addresses  --wide ${appBinary}`,
         {
@@ -231,10 +215,10 @@ class Server {
         .catch((err) => {
           this.handleError('failed to get disassembly using objdump', err);
         });
-      this.disassembly = new Future(promise);
+      this.disassemblyPromise = promise;
     }
 
-    return this.disassembly;
+    return this.disassemblyPromise;
   }
 }
 

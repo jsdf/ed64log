@@ -7,7 +7,7 @@
 #include "n64logo.h"
 #include "stage00.h"
 
-#include "ed64io_usb.h"
+#include "ed64io.h"
 
 #include <PR/os_internal.h>
 
@@ -42,47 +42,19 @@ void initStage00() {
   }
 }
 
-void causeTLBFault() {
-  ed64PrintfSync(
-      "intentionally causing TLB exception on load/instruction fetch "
-      "fault\n");
-  {
-    long e1;
-    e1 = *(long*)1;  // TLB exception on load/instruction fetch
-  }
-}
-
-void causeDivideByZeroException() {
-  ed64PrintfSync("intentionally causing float divide-by-zero fault\n");
-
-  {
-    // Fetch the current floating-point control/status register
-    u32 fpstat = __osGetFpcCsr();
-    // Enable divide-by-zero exception for floating point, so the fault
-    // handler thread can log float divide-by-zero errors
-    __osSetFpcCsr(fpstat | FPCSR_EZ);
-  }
-
-  {
-    float zero = 0;
-    ed64PrintfSync("result=%f\n", 1 / zero);
-  }
-}
-
-void causeOSError() {
-  // cause an os error
-  osSetThreadPri(&nuGfxThread, /*invalid thread priority*/ -1);
+void toggleRotationDirection() {
+  squaresRotationDirection = !squaresRotationDirection;
+  // Blocking (sync) log call. This will freeze the game for several
+  // milliseconds (depending on I/O time), so this mainly makes sense for
+  // debug logging where you just really want to get a message through to the
+  // logger.
+  ed64PrintfSync("reversing squaresRotationDirection\n");
 }
 
 void updateGame00() {
   nuContDataGetEx(contdata, 0);
   if (contdata[0].trigger & A_BUTTON) {
-    squaresRotationDirection = !squaresRotationDirection;
-    // Blocking (sync) log call. This will freeze the game for several
-    // milliseconds (depending on I/O time), so this mainly makes sense for
-    // debug logging where you just really want to get a message through to the
-    // logger.
-    ed64PrintfSync("reversing squaresRotationDirection\n");
+    toggleRotationDirection();
   }
 
   if (contdata[0].button & B_BUTTON) {
@@ -94,6 +66,7 @@ void updateGame00() {
     showN64Logo = FALSE;
   }
 
+  // each C button demonstrates an error handling feature
   if (contdata[0].trigger & L_CBUTTONS) {
     causeTLBFault();
   }
@@ -102,6 +75,12 @@ void updateGame00() {
   }
   if (contdata[0].trigger & U_CBUTTONS) {
     causeOSError();
+  }
+  if (contdata[0].trigger & D_CBUTTONS) {
+    // debugger example: sets a breakpoint in a function, then calls the
+    // function, which should hit breakpoint and enter debugger
+    ed64SetBreakpoint((u32*)&breakInThisFunction + 4);
+    breakInThisFunction();
   }
 
   {
@@ -237,4 +216,43 @@ void stage00(int pendingGfx) {
     makeDL00();
 
   updateGame00();
+}
+
+// functions which demonstrate various error handling capabilities
+
+void breakInThisFunction() {
+  // asm("break  0");
+  int data = 1 + 1;
+}
+
+void causeTLBFault() {
+  ed64PrintfSync(
+      "intentionally causing TLB exception on load/instruction fetch "
+      "fault\n");
+  {
+    long e1;
+    e1 = *(long*)1;  // TLB exception on load/instruction fetch
+  }
+}
+
+void causeDivideByZeroException() {
+  ed64PrintfSync("intentionally causing float divide-by-zero fault\n");
+
+  {
+    // Fetch the current floating-point control/status register
+    u32 fpstat = __osGetFpcCsr();
+    // Enable divide-by-zero exception for floating point, so the fault
+    // handler thread can log float divide-by-zero errors
+    __osSetFpcCsr(fpstat | FPCSR_EZ);
+  }
+
+  {
+    float zero = 0;
+    ed64PrintfSync("result=%f\n", 1 / zero);
+  }
+}
+
+void causeOSError() {
+  // cause an os error
+  osSetThreadPri(&nuGfxThread, /*invalid thread priority*/ -1);
 }

@@ -9,6 +9,7 @@
   "author": "James Friend <james@jsdf.co> (http://jsdf.co/)",
   "license": "ISC",
   "dependencies": {
+    "@serialport/parser-byte-length": "^9.0.0",
     "elf-tools": "^1.1.1",
     "express": "^4.17.1",
     "get-port": "^5.1.1",

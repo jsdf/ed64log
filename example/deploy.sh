@@ -45,5 +45,10 @@ retry loader64 -v --pifboot
 echo "starting logger. press ctrl+C to stop"
 
 # tail the logger
-ed64log
 
+if [ -z "${DEBUGGER-}" ]; then
+  ed64log
+else
+  cd ../debugger/
+  NODE_ENV=development node server.js
+fi

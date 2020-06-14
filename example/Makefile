@@ -17,6 +17,10 @@ LD  = ld
 MAKEROM = mild
 
 LCDEFS =	-DNU_DEBUG -DF3DEX_GBI_2
+ifdef DEBUGGER
+LCDEFS+= -DED64IO_DEBUGGER
+endif
+
 LCINCS =	-I. -I$(NUSYSINCDIR) -I$(ROOT)/usr/include/PR
 LCOPTS =	-G 0
 LDFLAGS = $(MKDEPOPT) -L$(LIB) -L$(NUSYSLIBDIR) -lnusys_d -lgultra_d -L$(GCCDIR)/mipse/lib -lkmc -g
