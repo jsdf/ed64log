@@ -182,7 +182,58 @@ function Stacktrace({pc, stacktrace}) {
   return 'loading...';
 }
 
-const Thread = React.memo(function Thread({thread, threadIDAtBreak, api}) {
+function RegisterValue({value}) {
+  const [format, setFormat] = useState(0);
+  const valueFormats = Object.entries(value);
+
+  const [formatType, valueFormatted] = valueFormats[
+    Math.min(format, valueFormats.length - 1)
+  ];
+
+  return (
+    <span
+      onClick={() => setFormat((s) => (s + 1) % valueFormats.length)}
+      style={{cursor: 'pointer'}}
+    >
+      {valueFormatted}{' '}
+      <span style={{fontSize: '0.8em', color: '#aaa'}}>({formatType})</span>
+    </span>
+  );
+}
+
+function Registers({registers}) {
+  return (
+    <div>
+      <details>
+        <summary>Registers</summary>
+        <div className="registers-grid">
+          {Object.entries(registers)
+            .filter(([name]) => name != 'id') // skip fields which aren't registers
+            .map(([name, value]) => (
+              <div
+                key={name}
+                style={{overflow: 'hidden', whiteSpace: 'nowrap'}}
+              >
+                <span style={{display: 'inline-block', width: 30}}>
+                  <strong>{name}</strong>
+                </span>{' '}
+                <span>
+                  <RegisterValue value={value} />
+                </span>
+              </div>
+            ))}
+        </div>
+      </details>
+    </div>
+  );
+}
+
+const Thread = React.memo(function Thread({
+  thread,
+  threadIDAtBreak,
+  api,
+  registers,
+}) {
   return (
     <div>
       <h3 style={{height: 24, overflow: 'hidden', margin: '8px 0 0 0'}}>
@@ -204,6 +255,8 @@ const Thread = React.memo(function Thread({thread, threadIDAtBreak, api}) {
       <div>state: {thread.stateName}</div>
       <div>priority: {thread.priority}</div>
       <div>pc: {thread.pc}</div>
+
+      {registers && <Registers registers={registers} />}
       <div>
         <Stacktrace pc={thread.pc} stacktrace={thread.stacktrace} />
       </div>
@@ -297,6 +350,7 @@ function App() {
                 thread={activeThread}
                 threadIDAtBreak={state.atBreakpoint}
                 api={apiRef.current}
+                registers={state.registers[activeThread.id]}
               />
             </div>
           )}

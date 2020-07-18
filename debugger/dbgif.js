@@ -186,6 +186,60 @@ class DebuggerInterface extends EventEmitter {
           ];
           // console.log('got binary threadstate', threadState);
           this.emit('threadstate', threadState);
+          break;
+        case PACKET_TYPES.RegistersPacket:
+          const registersState = {};
+          [
+            'at',
+            'v0',
+            'v1',
+            'a0',
+            'a1',
+            'a2',
+            'a3',
+            't0',
+            't1',
+            't2',
+            't3',
+            't4',
+            't5',
+            't6',
+            't7',
+            's0',
+            's1',
+            's2',
+            's3',
+            's4',
+            's5',
+            's6',
+            's7',
+            't8',
+            't9',
+            'gp',
+            'sp',
+            's8',
+            'ra',
+          ].forEach((field) => {
+            registersState[field] = {
+              u64: packet.readBigUInt64BE(pos).toString(16),
+              i32: packet.readInt32BE(pos + 4).toString(),
+            };
+            pos += 8;
+          });
+
+          ['id'].forEach((field) => {
+            const value = packet.readUInt32BE(pos);
+
+            switch (field) {
+              case 'id':
+                registersState[field] = value.toString();
+                break;
+            }
+            pos += 4;
+          });
+
+          this.emit('registersstate', registersState);
+          break;
       }
     };
 

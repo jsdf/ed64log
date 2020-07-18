@@ -65,6 +65,7 @@ class Server {
   // debugger state
   state = {
     threads: {},
+    registers: {},
     atBreakpoint: null,
     serverErrors: [],
   };
@@ -96,6 +97,14 @@ class Server {
         threads: {
           ...this.state.threads,
           [threadState.id]: threadState,
+        },
+      });
+    });
+    dbgif.on('registersstate', (registersState) => {
+      this.setState({
+        registers: {
+          ...this.state.registers,
+          [registersState.id]: registersState,
         },
       });
     });

@@ -11,7 +11,7 @@
   /*grid-auto-flow: column;*/
 }
 .thread {
-  width: 300px;
+  /*width: 300px;*/
 }
 .pane-thread {
   width: 70vw;
@@ -27,4 +27,13 @@
   border: solid 1px #ccc;
   margin: 8px;
   padding: 8px;
+}
+
+.registers-grid {
+  display: grid;
+  grid-gap: 10px;
+  width: 100%;
+  grid-template-columns: repeat(4, minmax(200px, 1fr));
+  /*grid-template-rows: repeat(auto-fit, minmax(40px, 1fr));*/
+  /*grid-auto-flow: column;*/
 }

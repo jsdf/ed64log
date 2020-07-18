@@ -279,10 +279,11 @@ void printFaultData(OSThread* t) {
 }
 
 typedef struct RegistersState {
-  u32 at, v0, v1, a0, a1, a2, a3;
-  u32 t0, t1, t2, t3, t4, t5, t6, t7;
-  u32 s0, s1, s2, s3, s4, s5, s6, s7;
-  u32 t8, t9, gp, sp, _s8, ra;
+  u64 at, v0, v1, a0, a1, a2, a3;
+  u64 t0, t1, t2, t3, t4, t5, t6, t7;
+  u64 s0, s1, s2, s3, s4, s5, s6, s7;
+  u64 t8, t9, gp, sp, _s8, ra;
+  u32 id;
 } RegistersState;
 
 static void sendRegisters(OSThread* t) {
@@ -293,9 +294,18 @@ static void sendRegisters(OSThread* t) {
       tc->t1, tc->t2, tc->t3, tc->t4,  tc->t5, tc->t6, tc->t7, tc->s0,
       tc->s1, tc->s2, tc->s3, tc->s4,  tc->s5, tc->s6, tc->s7, tc->t8,
       tc->t9, tc->gp, tc->sp, tc->_s8, tc->ra,
+      t->id,  // thread id
   };
 
   ed64SendBinaryData(&reg, RegistersPacket, sizeof(RegistersState));
+}
+
+static void sendStack(OSThread* t) {
+  //   __OSThreadContextHack* tc = (__OSThreadContextHack*)&t->context;
+  //   int size =
+  // tc->sp - tc->_s8
+
+  //   ed64SendBinaryData(&reg, RegistersPacket, sizeof(RegistersState));
 }
 
 static void printRegister(u32 regValue, char* regName, regDesc_t* regDesc) {
@@ -344,17 +354,18 @@ static void stopUserThreads() {
   }
 
   while (tptr->priority != -1) {
+    if (stoppedThreadsCount == MAX_STOPPED_THREADS) {
+      break;
+    }
     if (tptr->priority > 0 && tptr->priority < 128 && tptr != curThread) {
+      int stateBeforeStopping = tptr->state;
       osStopThread(tptr);
       if (tptr->state != OS_STATE_STOPPED) {
         DBGPRINT("Couldn't stop thread %d\n", tptr->id);
       } else {
         i = stoppedThreadsCount++;
-        if (i == MAX_STOPPED_THREADS) {
-          break;
-        }
         stoppedThreads[i] = tptr;
-        stoppedThreadsStates[i] = tptr->state;
+        stoppedThreadsStates[i] = stateBeforeStopping;
       }
     }
     tptr = tptr->tlnext;
@@ -782,12 +793,12 @@ static void walkFaultedThreads(void) {
     printFaultData(tptr);
 
     PRINTF("EDBG=break %d\n", tptr->id);
-    PRINTF("dumpThreads  \n");
+    PRINTF("dumpThreads\n");
     dumpThreads();
-    PRINTF("sendThreadStates  \n");
+    PRINTF("sendThreadStates \n");
     sendThreadStates();
-    PRINTF("sendThreadStates done \n");
-    // sendRegisters(tptr);
+    PRINTF("sendRegisters\n");
+    sendRegisters(tptr);
     PRINTF("stopping  \n");
 
     // don't allow user threads to continue while debugger is active
