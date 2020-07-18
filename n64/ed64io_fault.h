@@ -9,6 +9,9 @@
 void ed64StartFaultHandlerThread(int mainThreadPri);
 
 void ed64PrintStackTrace(OSThread* t, int framesToSkip);
-void ed64SendFaultMessage(OSThread* t);
+
+void ed64SetBreakpoint(u32* address);
+
+void ed64PrintThreads(int withStackTrace);
 
 #endif /* _ED64IO_FAULT_H */

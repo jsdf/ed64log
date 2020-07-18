@@ -17,6 +17,8 @@ void mainproc(void) {
   // register libultra error handler
   ed64RegisterOSErrorHandler();
 
+  ed64ReplaceOSSyncPrintf();
+
   // start thread which will catch and log errors
   ed64StartFaultHandlerThread(NU_GFX_TASKMGR_THREAD_PRI);
 

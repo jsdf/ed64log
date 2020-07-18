@@ -34,6 +34,8 @@ void initStage00() {
   squaresRotationDirection = FALSE;
   showN64Logo = FALSE;
 
+  osSyncPrintf("osSyncPrintf %s\n", "works");
+
   {
     int i;
     for (i = 0; i < NUM_SQUARES; ++i) {

@@ -230,7 +230,7 @@ u8 evd_fifoRd(void* buff, u16 blocks) {
 
   while (evd_isDmaBusy())
     ;
-  dma_read_s(buff, (0xb0000000 + ram_buff_addr * 2048), len);
+  dma_read_s(buff, (0xb0000000 + ram_buff_addr * 2048), len, FALSE);
   if (evd_isDmaTimeout())
     return EVD_ERROR_FIFO_TIMEOUT;
 
