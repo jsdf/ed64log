@@ -79,7 +79,7 @@ void updateGame00() {
   if (contdata[0].trigger & D_CBUTTONS) {
     // debugger example: sets a breakpoint in a function, then calls the
     // function, which should hit breakpoint and enter debugger
-    ed64SetBreakpoint((u32*)&breakInThisFunction + 4);
+    ed64SetBreakpoint((u32*)&breakInThisFunction);
     breakInThisFunction();
   }
 
@@ -222,7 +222,13 @@ void stage00(int pendingGfx) {
 
 void breakInThisFunction() {
   // asm("break  0");
-  int data = 1 + 1;
+  int i;
+  int data[10];
+  data[0] = 0;
+  data[1] = 1;
+  for (i = 2; i < 10; ++i) {
+    data[i] = data[i - 2] + data[i - 1];
+  }
 }
 
 void causeTLBFault() {
