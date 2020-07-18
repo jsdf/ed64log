@@ -482,6 +482,8 @@ typedef struct {
 
 #define breakinst(n) (0x0d | (((n + 16) & 0xfffff) << 6))
 
+#define breakinst_no_offset(n) (0x0d | (((n)&0xfffff) << 6))
+
 #define NUM_BREAKPOINTS 2
 static Breakpoint breakpoints[NUM_BREAKPOINTS]; /* the CPU breaks */
 static Breakpoint altBreak;                     /* the other temp break */
@@ -805,9 +807,15 @@ static void walkFaultedThreads(void) {
     // don't allow user threads to continue while debugger is active
     // stopUserThreads();
 
-    // poll for command from debugger client
-    while (!ed64DebuggerUsbListener(tptr)) {
-      evd_sleep(1000);
+    // if the current instruction is `break 1000`, automatically resume
+    if (*(int*)tptr->context.pc == breakinst_no_offset(1000)) {
+      // *(int*)tptr->context.pc = 0; // replace current instruction with nop
+      tptr->context.pc += 4;  // advance PC past the breakpoint
+    } else {
+      // poll for command from debugger client
+      while (!ed64DebuggerUsbListener(tptr)) {
+        evd_sleep(1000);
+      }
     }
     DBGPRINT("continuing\n");
   }
