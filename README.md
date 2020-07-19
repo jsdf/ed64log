@@ -52,7 +52,7 @@ ed64StartWatchdogThread(&intValueThatIncrements, 500);
 
 ### connecting from your computer (all platforms, node.js based)
 
-on any OS, you can use the node.js-based client to receive logs. there is also a native client (described below), but it only works on macOS and linux.
+on any OS, you can use the node.js-based client to receive logs
 
 first install [node and npm](https://nodejs.org/)
 
