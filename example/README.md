@@ -44,6 +44,10 @@ This will output disassembly around the program counter, including the current f
 # N64 OS error logging
 
 Press the C-up button to cause an error in a libultra function (osSetThreadPri). This demonstrates the ed64RegisterOSErrorHandler() function.
+
+# Watchdog Timer
+
+Press the C-down button to cause the game logic thread to go into an infinite loop. Within a second, the watchdog timer will notice that the game has frozen, and will print out the current state of each thread, including stacktraces (see "Exception logging and disassembly" above).
  
 ## How to build (macOS or linux):
 

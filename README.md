@@ -34,6 +34,16 @@ you can override nintendo's implementation of `osSyncPrintf` with an ed64log-bas
 
 optionally, you can override the default N64 OS error handler which prints errors in calls to libultra functions to osSyncPrintf, with one that prints to ed64SyncPrintf instead, by calling `ed64RegisterOSErrorHandler()` once in the initialization of your progam. note: this is not needed if you override osSyncPrintf() as described above.
 
+
+#### watchdog timer
+
+if you experience a freeze/hang in your game which doesn't produce any useful error message, you can create a watchdog timer to print out useful information about the application state after it freezes. the `ed64StartWatchdogThread()` takes a pointer to an integer value which should continually change while the program is working correctly (eg. a counter of the absolute frame number) and an interval in milliseconds at which the watchdog will check if the program is still running. when the watchdog timer interrupts the program it will check if the current value of the integer has changed since the last check. if the program has frozen (for example, having entered an infinite loop), the watchdog thread will print the current state of each thread, and a stacktrace of the thread's execution.
+
+example:
+```c
+ed64StartWatchdogThread(&intValueThatIncrements, 500);
+```
+
 ### using the tool (macOS)
 
 install required libraries from homebrew:

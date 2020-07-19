@@ -30,11 +30,15 @@ int squaresRotationDirection;
 
 int showN64Logo;
 
+static int frameCounter = 0;
+
 void initStage00() {
   squaresRotationDirection = FALSE;
   showN64Logo = FALSE;
 
   osSyncPrintf("osSyncPrintf %s\n", "works");
+
+  ed64StartWatchdogThread(&frameCounter, 1000);
 
   {
     int i;
@@ -54,7 +58,10 @@ void toggleRotationDirection() {
 }
 
 void updateGame00() {
+  frameCounter++;
+
   nuContDataGetEx(contdata, 0);
+
   if (contdata[0].trigger & A_BUTTON) {
     toggleRotationDirection();
   }
@@ -79,6 +86,10 @@ void updateGame00() {
     causeOSError();
   }
   if (contdata[0].trigger & D_CBUTTONS) {
+    hangThread();
+  }
+
+  if (contdata[0].trigger & D_JPAD) {
     // debugger example: sets a breakpoint in a function, then calls the
     // function, which should hit breakpoint and enter debugger
     ed64SetBreakpoint((u32*)&breakInThisFunction);
@@ -257,6 +268,11 @@ void causeDivideByZeroException() {
   {
     float zero = 0;
     ed64PrintfSync("result=%f\n", 1 / zero);
+  }
+}
+
+void hangThread() {
+  while (1) {
   }
 }
 

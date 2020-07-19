@@ -14,5 +14,6 @@ void breakInThisFunction();
 void causeTLBFault();
 void causeDivideByZeroException();
 void causeOSError();
+void hangThread();
 
 #endif /* _STAGE00_H_ */
