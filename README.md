@@ -22,6 +22,7 @@ then to run your game with logging:
 
 - in the initialization of your game, include [ed64io.h](n64/ed64io.h) and call `evd_init()` to initialize the everdrive hardware for writing. see the [example app](https://github.com/jsdf/ed64log/blob/master/example/main.c).
 
+- then add synchronous or asynchronous logging calls into your game code
 
 #### synchronous logging
 - include [ed64io.h](n64/ed64io.h) in your source file and use `ed64PrintfSync()` as you would normally use `printf()` in other programs. note: this will block the thread (eg. temporarily freeze the game) until it finishes logging (including if the host is not connected). this is mainly useful to guarantee that the log message gets through, eg. before a crash/failed assertion, or to test that the logging functionality is working.
@@ -29,7 +30,7 @@ then to run your game with logging:
 #### asynchronous logging
 - in the main loop (or at some regular interval) include [ed64io.h](n64/ed64io.h) and call `ed64AsyncLoggerFlush()` to write pending logs to the computer via usb.
 - to use printf logging in your game, include [ed64io.h](n64/ed64io.h) in your source file and use `ed64Printf()` as you would normally use `printf()` in other programs.
-- up to 512 chars will be buffered. if you log more than that without calling ed64AsyncLoggerFlush, the output will be truncated. if you want to log a lot you wil need to ed64AsyncLoggerFlush() more frequently during a frame. you could even call it on a timer in a background thread. i haven't explored this fully.
+- up to 512 chars will be buffered. if you log more than that without calling `ed64AsyncLoggerFlush`, the output will be truncated. if you want to log a lot you wil need to `ed64AsyncLoggerFlush()` more frequently during a frame. you could even call it on a timer in a background thread. i haven't explored this fully.
 
 you can see an example of implementing logging in a game in this commit to [goose64](https://github.com/jsdf/goose64/commit/cf2259a2b47cd8e2f828ad61a5dd5ddcd2c02986).
 
