@@ -38,7 +38,7 @@ void initStage00() {
 
   osSyncPrintf("osSyncPrintf %s\n", "works");
 
-  ed64StartWatchdogThread(&frameCounter, 1000);
+  ed64StartWatchdogThread(&frameCounter, 500);
 
   {
     int i;

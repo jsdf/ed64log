@@ -6,7 +6,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const fs = require('fs');
 
-const DebuggerInterface = require('./dbgif');
+const DebuggerInterface = require('../node-ed64log/dbgif');
 
 const uiRoot = 'debugger-ui/dist';
 const objdump = process.env.OBJDUMP_PATH || 'mips64-elf-objdump';

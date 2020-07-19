@@ -1,0 +1,18 @@
+{
+  "name": "ed64logjs",
+  "version": "1.0.1",
+  "description": "node-based client for the ed64log n64 homebrew logging tool",
+  "main": "cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "ed64logjs": "./cli.js"
+  },
+  "author": "James Friend <james@jsdf.co> (http://jsdf.co/)",
+  "license": "ISC",
+  "dependencies": {
+    "@serialport/parser-byte-length": "^9.0.0",
+    "serialport": "^9.0.0"
+  }
+}

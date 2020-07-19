@@ -11,6 +11,7 @@ to implement usb logging in your n64 game:
 
 - in the initialization of your game, include [ed64io_everdrive.h](n64/ed64io_everdrive.h) and call `evd_init()` to initialize the everdrive hardware for writing. see the [example app](https://github.com/jsdf/ed64log/blob/master/example/main.c).
 
+
 #### synchronous logging
 - include [ed64io_usb.h](n64/ed64io_usb.h) in your source file and use `ed64PrintfSync()` as you would normally use `printf()` in other programs. note: this will block the thread (eg. temporarily freeze the game) until it finishes logging (including if the host is not connected). this is mainly useful to guarantee that the log message gets through, eg. before a crash/failed assertion, or to test that the logging functionality is working.
 
@@ -37,14 +38,38 @@ optionally, you can override the default N64 OS error handler which prints error
 
 #### watchdog timer
 
-if you experience a freeze/hang in your game which doesn't produce any useful error message, you can create a watchdog timer to print out useful information about the application state after it freezes. the `ed64StartWatchdogThread()` takes a pointer to an integer value which should continually change while the program is working correctly (eg. a counter of the absolute frame number) and an interval in milliseconds at which the watchdog will check if the program is still running. when the watchdog timer interrupts the program it will check if the current value of the integer has changed since the last check. if the program has frozen (for example, having entered an infinite loop), the watchdog thread will print the current state of each thread, and a stacktrace of the thread's execution.
+if you experience a freeze/hang in your game which doesn't produce any useful error message, you can create a watchdog timer to detect when the game has frozeon and then print out useful information about the application state.
+
+`ed64StartWatchdogThread` takes a pointer to an integer value which should continually change while the program is working correctly (eg. a counter of the absolute frame number) and an interval in milliseconds at which the watchdog will check if the program is still running. when the watchdog timer interrupts the program it will check if the current value of the integer has changed since the last check. if the program has frozen (for example, having entered an infinite loop), the watchdog thread will print the current state of each thread, and a stacktrace of the thread's execution.
 
 example:
 ```c
 ed64StartWatchdogThread(&intValueThatIncrements, 500);
 ```
 
-### using the tool (macOS)
+
+
+### connecting from your computer (all platforms, node.js based)
+
+on any OS, you can use the node.js-based client to receive logs. there is also a native client (described below), but it only works on macOS and linux.
+
+first install [node and npm](https://nodejs.org/)
+
+then install ed64logjs:
+
+```
+npm install -g ed64logjs
+```
+
+then, after starting the game on the everdrive, run
+
+```bash
+ed64logjs
+```
+
+
+
+### connecting from your computer (macOS native)
 
 install required libraries from homebrew:
 
@@ -67,7 +92,7 @@ then, after starting the game on the everdrive, run
 this will output the logs as they are sent from the everdrive
 
 
-### using the tool (linux)
+### connecting from your computer (linux native)
 
 install `libftdi` from your package manager of choice (including headers). eg for ubuntu:
 
@@ -91,4 +116,5 @@ sudo ./ed64log
 
 ### acknowledgements
 
-part of the source is based on [loader64](http://krikzz.com/forum/index.php?topic=1407.msg14076) by saturnu <tt@anpa.nl>
+the source of the ed64log client is based on [loader64](http://krikzz.com/forum/index.php?topic=1407.msg14076) by saturnu <tt@anpa.nl>
+

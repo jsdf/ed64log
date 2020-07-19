@@ -46,7 +46,9 @@ echo "starting logger. press ctrl+C to stop"
 
 # tail the logger
 
-if [ -z "${DEBUGGER-}" ]; then
+if [ -n "${JS-}" ]; then
+  ed64logjs
+elif [ -z "${DEBUGGER-}" ]; then
   ed64log
 else
   cd ../debugger/

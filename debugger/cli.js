@@ -1,6 +1,6 @@
 const readline = require('readline');
 
-const DebuggerInterface = require('./dbgif');
+const DebuggerInterface = require('../node-ed64log/dbgif');
 
 const dbgif = new DebuggerInterface();
 dbgif.start();
