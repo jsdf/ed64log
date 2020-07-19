@@ -50,7 +50,7 @@ optionally, you can override the default N64 OS error handler which prints error
 
 #### watchdog timer
 
-if you experience a freeze/hang in your game which doesn't produce any useful error message, you can create a watchdog timer to detect when the game has frozeon and then print out useful information about the application state.
+if you experience a freeze/hang in your game which doesn't produce any useful error message, you can create a watchdog timer to detect when the game has frozen and then print out useful information about the application state.
 
 `ed64StartWatchdogThread` takes a pointer to an integer value which should continually change while the program is working correctly (eg. a counter of the absolute frame number) and an interval in milliseconds at which the watchdog will check if the program is still running. when the watchdog timer interrupts the program it will check if the current value of the integer has changed since the last check. if the program has frozen (for example, having entered an infinite loop), the watchdog thread will print the current state of each thread, and a stacktrace of the thread's execution.
 
