@@ -5,7 +5,18 @@ enables printf() logging over usb from homebrew games built using the n64 sdk, w
 
 ### getting started
 
-to implement usb logging in your n64 game:
+at a high level, the steps involved are:
+
+- copy the code to your n64 game and add calls to the ed64log api
+- install or build the logger client program on your computer
+
+then to run your game with logging:
+
+- connect to the everdrive via usb
+- build and run your game on the everdrive
+- run the logger client program on your computer
+
+### implement usb logging in your n64 game
 
 - copy the sources from the [n64](n64) directory of this repo into your game's source, and add the .c files to your Makefile.
 
@@ -22,13 +33,13 @@ to implement usb logging in your n64 game:
 
 you can see an example of implementing logging in a game in this commit to [goose64](https://github.com/jsdf/goose64/commit/cf2259a2b47cd8e2f828ad61a5dd5ddcd2c02986).
 
-#### exception logger
-
-optionally, you can set up an exception handler thread to automatically log details when an exception occurs (eg. invalid memory access) by calling `ed64StartFaultHandlerThread()`, passing the thread priority to run at (typically, the same as the main thread) [like this](https://github.com/jsdf/ed64log/blob/master/example/main.c#L17). for usage details, see the [example app readme](https://github.com/jsdf/ed64log/tree/master/example#exception-logging-and-disassembly).
-
 #### osSyncPrintf support
 
 you can override nintendo's implementation of `osSyncPrintf` with an ed64log-based version by calling `ed64ReplaceOSSyncPrintf()` once as part of your game's startup process. this will allow all `osSyncPrintf()` calls to work, including debug error messages in libultra_d and libmus_d. 
+
+#### exception logger
+
+optionally, you can set up an exception handler thread to automatically log details when an exception occurs (eg. invalid memory access) by calling `ed64StartFaultHandlerThread()`, passing the thread priority to run at (typically, the same as the main thread) [like this](https://github.com/jsdf/ed64log/blob/master/example/main.c#L17). for usage details, see the [example app readme](https://github.com/jsdf/ed64log/tree/master/example#exception-logging-and-disassembly).
 
 #### OS error logger
 
