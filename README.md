@@ -30,11 +30,11 @@ optionally, you can set up an exception handler thread to automatically log deta
 
 you can override nintendo's implementation of `osSyncPrintf` with an ed64log-based version by calling `ed64ReplaceOSSyncPrintf()` once as part of your game's startup process. this will allow all `osSyncPrintf()` calls to work, including debug error messages in libultra_d and libmus_d. 
 
-
 #### OS error logger
 
-optionally, you can override the default N64 OS error handler which prints errors in calls to libultra functions to osSyncPrintf, with one that prints to ed64SyncPrintf instead, by calling `ed64RegisterOSErrorHandler()` once in the initialization of your progam. note: this is not needed if you override osSyncPrintf() as described above.
+optionally, you can override the default N64 OS error handler which prints errors in calls to libultra functions to `osSyncPrintf`, with one that prints to `ed64SyncPrintf` instead, by calling `ed64RegisterOSErrorHandler()` once in the initialization of your progam.
 
+**note:** this is not needed if you override `osSyncPrintf()` as described above.
 
 #### watchdog timer
 
